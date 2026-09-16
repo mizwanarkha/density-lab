@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Virtual Density Lab: Solids & Liquids</title>
+  <style>
+    :root {
+      --primary-color: #1e3a8a;
+      --secondary-color: #3b82f6;
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-color: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 12px;
+      touch-action: manipulation;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary-color);
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      max-width: 220px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 2px solid var(--secondary-color);
+      background: transparent;
+      color: var(--secondary-color);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .lab-section {
+      display: none;
+    }
+
+    .lab-section.active {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .lab-top-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 15px;
+    }
+
+    @media (max-width: 768px) {
+      .lab-top-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .panel h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    .workbench {
+      position: relative;
+      height: 420px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      border: 2px solid #cbd5e1;
+      display: flex;
+      justify-space: space-around;
+      align-items: flex-end;
+      padding-bottom: 15px;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    .balance-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 140px;
+    }
+
+    .balance-pan {
+      width: 120px;
+      height: 12px;
+      background: #94a3b8;
+      border-radius: 4px;
+      border: 1px solid #64748b;
+      position: relative;
+    }
+
+    .balance-base {
+      width: 135px;
+      height: 85px;
+      background: #334155;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+    }
+
+    .digital-display {
+      background: #0f172a;
+      color: #00ff66;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 2px solid #475569;
+      width: 110px;
+      text-align: right;
+    }
+
+    .action-btn {
+      margin-top: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: bold;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      touch-action: manipulation;
+      width: 100%;
+    }
+
+    .action-btn:active {
+      background: #1d4ed8;
+    }
+
+    .reset-btn {
+      background: #64748b;
+    }
+
+    .reset-btn:hover {
+      background: #475569;
+    }
+
+    .submit-btn {
+      background: #059669;
+      margin-top: 15px;
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+
+    .submit-btn:hover {
+      background: #047857;
+    }
+
+    .cylinder-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .cylinder {
+      width: 75px;
+      height: 350px;
+      border: 3px solid #64748b;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      position: relative;
+      background: rgba(255, 255, 255, 0.7);
+      overflow: hidden;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    }
+
+    .cylinder-base {
+      width: 110px;
+      height: 12px;
+      background: #64748b;
+      border-radius: 4px;
+    }
+
+    .water-fill {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 0px;
+      background-color: rgba(56, 189, 248, 0.6);
+      border-top: 2px solid #0284c7;
+      transition: height 0.1s linear;
+    }
+
+    .pour-stream {
+      position: absolute;
+      top: 60px;
+      right: 170px;
+      width: 4px;
+      height: 240px;
+      background: rgba(56, 189, 248, 0.8);
+      display: none;
+      z-index: 5;
+    }
+
+    .ticks {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 300px;
+      pointer-events: none;
+    }
+
+    .tick {
+      position: absolute;
+      left: 0;
+      width: 8px;
+      height: 1px;
+      background: #334155;
+    }
+
+    .tick.medium {
+      width: 14px;
+      background: #1e293b;
+    }
+
+    .tick.major {
+      width: 22px;
+      height: 1.5px;
+      background: #0f172a;
+    }
+
+    .tick-label {
+      position: absolute;
+      left: 26px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #0f172a;
+      transform: translateY(-50%);
+    }
+
+    .cylinder-header {
+      position: absolute;
+      top: 5px;
+      right: 8px;
+      font-size: 10px;
+      font-weight: bold;
+      color: #475569;
+    }
+
+    #glass-water {
+      width: 55px;
+      height: 65px;
+      background: rgba(56, 189, 248, 0.5);
+      border: 3px solid #0284c7;
+      border-radius: 4px 4px 10px 10px;
+      position: absolute;
+      top: 200px;
+      left: 15px;
+      cursor: grab;
+      touch-action: none;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: #0f172a;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    }
+
+    #glass-water::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      width: 10px;
+      height: 10px;
+      border-top: 3px solid #0284c7;
+      border-right: 3px solid #0284c7;
+      transform: rotate(45deg);
+    }
+
+    .draggable-solid {
+      cursor: grab;
+      position: absolute;
+      touch-action: none;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 11px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+      transition: transform 0.1s ease;
+    }
+
+    .draggable-solid:active, #glass-water:active {
+      cursor: grabbing;
+      transform: scale(1.1);
+    }
+
+    #obj-stone {
+      width: 48px;
+      height: 42px;
+      background: radial-gradient(circle at 35% 35%, #78716c, #44403c, #1c1917);
+      clip-path: polygon(20% 0%, 80% 10%, 100% 50%, 85% 95%, 45% 100%, 5% 80%, 0% 35%);
+      box-shadow: inset -3px -3px 6px rgba(0,0,0,0.6);
+    }
+
+    #obj-iron {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #cbd5e1 0%, #64748b 50%, #334155 100%);
+      border-radius: 4px;
+      border: 1px solid #94a3b8;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 1px 1px 2px rgba(255,255,255,0.8);
+    }
+
+    #obj-wood {
+      width: 46px;
+      height: 46px;
+      background: repeating-radial-gradient(
+        circle at 50% 50%,
+        #d97706,
+        #d97706 6px,
+        #b45309 8px,
+        #b45309 12px
+      );
+      border-radius: 50%;
+      border: 3px solid #78350f;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.25), inset 0 0 4px rgba(0,0,0,0.4);
+    }
+
+    .table-container {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px;
+      overflow-x: auto;
+    }
+
+    .table-container h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-size: 1.05rem;
+    }
+
+    .student-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .student-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      font-size: 13px;
+    }
+
+    table.data-table th, table.data-table td {
+      border: 1px solid #cbd5e1;
+      padding: 8px;
+      text-align: center;
+    }
+
+    table.data-table th {
+      background-color: #e2e8f0;
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #94a3b8;
+      border-radius: 4px;
+      font-size: 13px;
+      user-select: auto;
+      -webkit-user-select: auto;
+    }
+
+    input[type="number"] {
+      text-align: center;
+    }
+
+    input:focus {
+      border-color: var(--secondary-color);
+      outline: none;
+      background-color: #f0f9ff;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    label .req {
+      color: #dc2626;
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Virtual Density Lab</h1>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchLab('solid')">1. Density of Solids</button>
+    <button class="tab-btn" onclick="switchLab('liquid')">2. Density of Liquids</button>
+  </div>
+
+  <!-- ==================== TAB 1: SOLID DENSITY ==================== -->
+  <div id="solid-lab" class="lab-section active">
+    
+    <div class="lab-top-row">
+      <div class="panel">
+        <h3>Laboratory Guide</h3>
+        <p style="font-size: 13px; line-height: 1.4;">
+          Explore the equipment to measure the mass and volume of each solid object, then record your readings in the table below.
+        </p>
+        
+        <button class="action-btn" id="pour-btn">Pour Water (+1 mL)</button>
+        <button class="action-btn reset-btn" onclick="emptyCylinder()">Empty Cylinder</button>
+        <button class="action-btn reset-btn" onclick="resetSolids()">Reset Workspace</button>
+      </div>
+
+      <div class="workbench" id="solid-workbench">
+        <div class="pour-stream" id="pour-stream"></div>
+
+        <div id="glass-water" class="draggable-item">
+          Water Pitcher
+        </div>
+
+        <div id="obj-stone" class="draggable-solid draggable-item" style="top: 15px; left: 15px;">Stone</div>
+        <div id="obj-iron" class="draggable-solid draggable-item" style="top: 75px; left: 15px;">Iron</div>
+        <div id="obj-wood" class="draggable-solid draggable-item" style="top: 135px; left: 15px;">Wood</div>
+
+        <div class="balance-container" id="solid-balance">
+          <div class="balance-pan" id="solid-pan"></div>
+          <div class="balance-base">
+            <div class="digital-display" id="solid-display">0.00 g</div>
+          </div>
+        </div>
+
+        <div class="cylinder-container" id="solid-cylinder">
+          <div class="cylinder">
+            <span class="cylinder-header">mL</span>
+            <div class="water-fill" id="solid-water"></div>
+            <div class="ticks" id="solid-ticks"></div>
+          </div>
+          <div class="cylinder-base"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Data Table: Solids -->
+    <form id="solid-form" onsubmit="submitSolidData(event)">
+      <div class="table-container">
+        <h3>Data Table 1: Solid Objects Observation</h3>
+        
+        <div class="student-info-grid">
+          <div>
+            <label for="solid-student-name">Student Name <span class="req">*</span></label>
+            <input type="text" id="solid-student-name" placeholder="Enter your full name" required>
+          </div>
+          <div>
+            <label for="solid-student-class">Class <span class="req">*</span></label>
+            <input type="text" id="solid-student-class" placeholder="e.g. 7A / 9B" required>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Object Name</th>
+              <th>Mass (g) <span class="req">*</span></th>
+              <th>Volume (mL) <span class="req">*</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Stone</strong></td>
+              <td><input type="number" id="solid-m-stone" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="solid-v-stone" step="0.1" placeholder="0.0" required></td>
+            </tr>
+            <tr>
+              <td><strong>Iron</strong></td>
+              <td><input type="number" id="solid-m-iron" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="solid-v-iron" step="0.1" placeholder="0.0" required></td>
+            </tr>
+            <tr>
+              <td><strong>Wood</strong></td>
+              <td><input type="number" id="solid-m-wood" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="solid-v-wood" step="0.1" placeholder="0.0" required></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="submit" class="action-btn submit-btn" id="solid-submit-btn">Submit Solid Data to Google Sheets</button>
+      </div>
+    </form>
+
+  </div>
+
+  <!-- ==================== TAB 2: LIQUID DENSITY ==================== -->
+  <div id="liquid-lab" class="lab-section">
+    
+    <div class="lab-top-row">
+      <div class="panel">
+        <h3>Laboratory Guide</h3>
+        <p style="font-size: 13px; line-height: 1.4;">
+          Use the controls to measure the mass and volume of each liquid material, then record your readings in the table below.
+        </p>
+
+        <div class="form-group">
+          <label for="liquid-type">Select Liquid Material:</label>
+          <select id="liquid-type" onchange="updateLiquidProperties()">
+            <option value="water">Liquid A</option>
+            <option value="oil">Liquid B</option>
+            <option value="glycerin">Liquid C</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="liquid-volume-slider">Volume: <span id="vol-slider-val">0</span> mL</label>
+          <input type="range" id="liquid-volume-slider" min="0" max="100" value="0" step="1" oninput="updateLiquidProperties()">
+        </div>
+
+        <button class="action-btn reset-btn" onclick="tareLiquidScale()">TARE / ZERO</button>
+      </div>
+
+      <div class="workbench">
+        <div class="balance-container">
+          <div class="cylinder-container">
+            <div class="cylinder">
+              <span class="cylinder-header">mL</span>
+              <div class="water-fill" id="liquid-water" style="height: 0px;"></div>
+              <div class="ticks" id="liquid-ticks"></div>
+            </div>
+            <div class="cylinder-base"></div>
+          </div>
+          <div class="balance-pan"></div>
+          <div class="balance-base">
+            <div class="digital-display" id="liquid-display">120.00 g</div>
+            <button class="action-btn reset-btn" onclick="tareLiquidScale()" style="margin-top: 5px;">TARE / ZERO</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Data Table: Liquids -->
+    <form id="liquid-form" onsubmit="submitLiquidData(event)">
+      <div class="table-container">
+        <h3>Data Table 2: Liquid Material Observation</h3>
+        
+        <div class="student-info-grid">
+          <div>
+            <label for="liq-student-name">Student Name <span class="req">*</span></label>
+            <input type="text" id="liq-student-name" placeholder="Enter your full name" required>
+          </div>
+          <div>
+            <label for="liq-student-class">Class <span class="req">*</span></label>
+            <input type="text" id="liq-student-class" placeholder="e.g. 7A / 9B" required>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Liquid Type</th>
+              <th>Mass (g) <span class="req">*</span></th>
+              <th>Volume (mL) <span class="req">*</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Liquid A</strong></td>
+              <td><input type="number" id="liq-m-a" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="liq-v-a" step="0.1" placeholder="0.0" required></td>
+            </tr>
+            <tr>
+              <td><strong>Liquid B</strong></td>
+              <td><input type="number" id="liq-m-b" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="liq-v-b" step="0.1" placeholder="0.0" required></td>
+            </tr>
+            <tr>
+              <td><strong>Liquid C</strong></td>
+              <td><input type="number" id="liq-m-c" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="liq-v-c" step="0.1" placeholder="0.0" required></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="submit" class="action-btn submit-btn" id="liquid-submit-btn">Submit Liquid Data to Google Sheets</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+<script>
+  // YOUR GOOGLE APPS SCRIPT WEB APP URL INTEGRATED BELOW
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJrkh8ps1WdqnQAI2OLlorwT_W8zhcTeD9fpMpOsc9-fVIyEMqlNsJDKpubwt5WD7S/exec";
+
+  // --- DATA & STATE ---
+  const solidData = {
+    'obj-stone': { name: 'Stone', mass: 58.32, volume: 21.6 },
+    'obj-iron': { name: 'Iron', mass: 159.36, volume: 20.3 },
+    'obj-wood': { name: 'Wood', mass: 16.08, volume: 26.8 }
+  };
+
+  const liquidsData = {
+    water: { density: 1.00, color: 'rgba(56, 189, 248, 0.6)', border: '#0284c7' },
+    oil: { density: 0.92, color: 'rgba(250, 204, 21, 0.7)', border: '#ca8a04' },
+    glycerin: { density: 1.26, color: 'rgba(236, 72, 153, 0.5)', border: '#db2777' }
+  };
+
+  let pouredWaterVolume = 0.0;
+  const cylinderEmptyWeight = 120.0;
+  let isTared = false;
+  let pourInterval = null;
+
+  // --- TAB SWITCHING ---
+  function switchLab(type) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.lab-section').forEach(sec => sec.classList.remove('active'));
+
+    if (type === 'solid') {
+      document.querySelectorAll('.tab-btn')[0].classList.add('active');
+      document.getElementById('solid-lab').classList.add('active');
+    } else {
+      document.querySelectorAll('.tab-btn')[1].classList.add('active');
+      document.getElementById('liquid-lab').classList.add('active');
+      updateLiquidProperties();
+    }
+  }
+
+  // --- DETAILED 1-100 mL SCALE GENERATOR ---
+  function createDetailedTicks(containerId) {
+    const ticksContainer = document.getElementById(containerId);
+    ticksContainer.innerHTML = '';
+    
+    for (let ml = 0; ml <= 100; ml++) {
+      const tick = document.createElement('div');
+      
+      if (ml % 10 === 0) {
+        tick.className = 'tick major';
+        if (ml > 0) {
+          const label = document.createElement('div');
+          label.className = 'tick-label';
+          label.textContent = ml;
+          tick.appendChild(label);
+        }
+      } else if (ml % 5 === 0) {
+        tick.className = 'tick medium';
+      } else {
+        tick.className = 'tick';
+      }
+
+      tick.style.bottom = (ml * 3) + 'px';
+      ticksContainer.appendChild(tick);
+    }
+  }
+
+  createDetailedTicks('solid-ticks');
+  createDetailedTicks('liquid-ticks');
+
+  // --- CONTINUOUS REALISTIC POURING ---
+  function addWaterUnit() {
+    if (pouredWaterVolume < 100) {
+      pouredWaterVolume += 1.0;
+      updateSolidCylinderLevel();
+    }
+  }
+
+  function startPouring() {
+    if (pourInterval) return;
+    addWaterUnit();
+    document.getElementById('pour-stream').style.display = 'block';
+    pourInterval = setInterval(addWaterUnit, 80);
+  }
+
+  function stopPouring() {
+    if (pourInterval) {
+      clearInterval(pourInterval);
+      pourInterval = null;
+    }
+    document.getElementById('pour-stream').style.display = 'none';
+  }
+
+  const pourBtn = document.getElementById('pour-btn');
+  pourBtn.addEventListener('pointerdown', startPouring);
+  pourBtn.addEventListener('pointerup', stopPouring);
+  pourBtn.addEventListener('pointerleave', stopPouring);
+
+  // --- POINTER EVENT DRAG SYSTEM ---
+  const draggables = document.querySelectorAll('.draggable-item');
+  let activeElement = null;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  draggables.forEach(elem => {
+    elem.addEventListener('pointerdown', startDrag);
+  });
+
+  function startDrag(e) {
+    e.preventDefault();
+    activeElement = e.currentTarget;
+    activeElement.setPointerCapture(e.pointerId);
+
+    const rect = activeElement.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    activeElement.addEventListener('pointermove', drag);
+    activeElement.addEventListener('pointerup', stopDrag);
+    activeElement.addEventListener('pointercancel', stopDrag);
+  }
+
+  function drag(e) {
+    if (!activeElement) return;
+    e.preventDefault();
+
+    const workbench = document.getElementById('solid-workbench').getBoundingClientRect();
+
+    let left = e.clientX - workbench.left - offsetX;
+    let top = e.clientY - workbench.top - offsetY;
+
+    activeElement.style.left = `${left}px`;
+    activeElement.style.top = `${top}px`;
+
+    if (activeElement.id === 'glass-water') {
+      const cylinder = document.getElementById('solid-cylinder').getBoundingClientRect();
+      const elemRect = activeElement.getBoundingClientRect();
+
+      if (isOverlapping(elemRect, cylinder)) {
+        startPouring();
+      } else {
+        stopPouring();
+      }
+    }
+  }
+
+  function stopDrag(e) {
+    if (!activeElement) return;
+
+    activeElement.releasePointerCapture(e.pointerId);
+    activeElement.removeEventListener('pointermove', drag);
+    activeElement.removeEventListener('pointerup', stopDrag);
+    activeElement.removeEventListener('pointercancel', stopDrag);
+
+    stopPouring();
+    checkDropZones(activeElement);
+    activeElement = null;
+  }
+
+  function checkDropZones(elem) {
+    const elemRect = elem.getBoundingClientRect();
+    const balancePan = document.getElementById('solid-pan').getBoundingClientRect();
+    const cylinder = document.getElementById('solid-cylinder').getBoundingClientRect();
+    const workbench = document.getElementById('solid-workbench').getBoundingClientRect();
+
+    const objId = elem.id;
+
+    if (objId === 'glass-water') {
+      resetGlassPosition();
+      return;
+    }
+
+    const data = solidData[objId];
+
+    if (isOverlapping(elemRect, balancePan)) {
+      document.getElementById('solid-display').textContent = data.mass.toFixed(2) + ' g';
+      elem.style.left = (balancePan.left - workbench.left + 35) + 'px';
+      elem.style.top = (balancePan.top - workbench.top - 38) + 'px';
+    } else {
+      updateBalanceState();
+    }
+
+    if (isOverlapping(elemRect, cylinder)) {
+      elem.style.left = (cylinder.left - workbench.left + 14) + 'px';
+      elem.style.top = (cylinder.bottom - workbench.top - 48) + 'px';
+    }
+
+    updateSolidCylinderLevel();
+  }
+
+  function updateSolidCylinderLevel() {
+    let currentVolume = pouredWaterVolume;
+    const cylinder = document.getElementById('solid-cylinder').getBoundingClientRect();
+
+    document.querySelectorAll('.draggable-solid').forEach(elem => {
+      const elemRect = elem.getBoundingClientRect();
+      if (isOverlapping(elemRect, cylinder)) {
+        currentVolume += solidData[elem.id].volume;
+      }
+    });
+
+    document.getElementById('solid-water').style.height = (currentVolume * 3).toFixed(1) + 'px';
+  }
+
+  function isOverlapping(rect1, rect2) {
+    return !(
+      rect1.right < rect2.left ||
+      rect1.left > rect2.right ||
+      rect1.bottom < rect2.top ||
+      rect1.top > rect2.bottom
+    );
+  }
+
+  function updateBalanceState() {
+    let panOccupied = false;
+    const balancePan = document.getElementById('solid-pan').getBoundingClientRect();
+
+    document.querySelectorAll('.draggable-solid').forEach(elem => {
+      const elemRect = elem.getBoundingClientRect();
+      if (isOverlapping(elemRect, balancePan)) {
+        panOccupied = true;
+        document.getElementById('solid-display').textContent = solidData[elem.id].mass.toFixed(2) + ' g';
+      }
+    });
+
+    if (!panOccupied) {
+      document.getElementById('solid-display').textContent = '0.00 g';
+    }
+  }
+
+  function resetGlassPosition() {
+    const glass = document.getElementById('glass-water');
+    glass.style.left = '15px';
+    glass.style.top = '200px';
+  }
+
+  function emptyCylinder() {
+    pouredWaterVolume = 0.0;
+    updateSolidCylinderLevel();
+  }
+
+  function resetSolids() {
+    document.getElementById('obj-stone').style.left = '15px';
+    document.getElementById('obj-stone').style.top = '15px';
+
+    document.getElementById('obj-iron').style.left = '15px';
+    document.getElementById('obj-iron').style.top = '75px';
+
+    document.getElementById('obj-wood').style.left = '15px';
+    document.getElementById('obj-wood').style.top = '135px';
+
+    resetGlassPosition();
+    emptyCylinder();
+
+    document.getElementById('solid-display').textContent = '0.00 g';
+  }
+
+  // --- LIQUID LAB LOGIC ---
+  function updateLiquidProperties() {
+    const liquidType = document.getElementById('liquid-type').value;
+    const volume = parseFloat(document.getElementById('liquid-volume-slider').value);
+    document.getElementById('vol-slider-val').textContent = volume;
+
+    const data = liquidsData[liquidType];
+    const waterElement = document.getElementById('liquid-water');
+
+    waterElement.style.height = (volume * 3) + 'px';
+    waterElement.style.backgroundColor = data.color;
+    waterElement.style.borderTopColor = data.border;
+
+    const liquidMass = volume * data.density;
+    let totalMass = cylinderEmptyWeight + liquidMass;
+
+    if (isTared) {
+      totalMass -= cylinderEmptyWeight;
+    }
+
+    document.getElementById('liquid-display').textContent = totalMass.toFixed(2) + ' g';
+  }
+
+  function tareLiquidScale() {
+    isTared = !isTared;
+    updateLiquidProperties();
+  }
+
+  // --- SUBMISSION LOGIC FOR GOOGLE SHEETS ---
+  function submitSolidData(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('solid-submit-btn');
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
+
+    const payload = {
+      type: "solid",
+      studentName: document.getElementById('solid-student-name').value,
+      studentClass: document.getElementById('solid-student-class').value,
+      records: [
+        { objectName: "Stone", mass: val('solid-m-stone'), volume: val('solid-v-stone') },
+        { objectName: "Iron", mass: val('solid-m-iron'), volume: val('solid-v-iron') },
+        { objectName: "Wood", mass: val('solid-m-wood'), volume: val('solid-v-wood') }
+      ]
+    };
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      alert('Solid density data successfully submitted!');
+      btn.disabled = false;
+      btn.textContent = "Submit Solid Data to Google Sheets";
+    })
+    .catch(error => {
+      alert('Error submitting data: ' + error);
+      btn.disabled = false;
+      btn.textContent = "Submit Solid Data to Google Sheets";
+    });
+  }
+
+  function submitLiquidData(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('liquid-submit-btn');
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
+
+    const payload = {
+      type: "liquid",
+      studentName: document.getElementById('liq-student-name').value,
+      studentClass: document.getElementById('liq-student-class').value,
+      records: [
+        { liquidType: "Liquid A", mass: val('liq-m-a'), volume: val('liq-v-a') },
+        { liquidType: "Liquid B", mass: val('liq-m-b'), volume: val('liq-v-b') },
+        { liquidType: "Liquid C", mass: val('liq-m-c'), volume: val('liq-v-c') }
+      ]
+    };
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      alert('Liquid density data successfully submitted!');
+      btn.disabled = false;
+      btn.textContent = "Submit Liquid Data to Google Sheets";
+    })
+    .catch(error => {
+      alert('Error submitting data: ' + error);
+      btn.disabled = false;
+      btn.textContent = "Submit Liquid Data to Google Sheets";
+    });
+  }
+
+  function val(id) {
+    return document.getElementById(id).value || '0';
+  }
+</script>
+
+</body>
+</html>
