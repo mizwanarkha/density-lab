@@ -667,8 +667,8 @@
 </div>
 
 <script>
-  // YOUR GOOGLE APPS SCRIPT WEB APP URL INTEGRATED BELOW
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJrkh8ps1WdqnQAI2OLlorwT_W8zhcTeD9fpMpOsc9-fVIyEMqlNsJDKpubwt5WD7S/exec";
+  // GOOGLE APPS SCRIPT WEB APP URL INTEGRATED
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytpzSckeBuOxztQk6FaTHof-xiPeVgs73YT1V0O7ouECcrJhHtDlQfs5NLF80vIwk/exec";
 
   // --- DATA & STATE ---
   const solidData = {
@@ -860,7 +860,10 @@
     document.querySelectorAll('.draggable-solid').forEach(elem => {
       const elemRect = elem.getBoundingClientRect();
       if (isOverlapping(elemRect, cylinder)) {
-        currentVolume += solidData[elem.id].volume;
+        // ONLY add object volume if water has actually been poured in
+        if (pouredWaterVolume > 0) {
+          currentVolume += solidData[elem.id].volume;
+        }
       }
     });
 
