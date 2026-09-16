@@ -36,6 +36,7 @@
       padding: 15px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      position: relative;
     }
 
     h1 {
@@ -43,6 +44,78 @@
       color: var(--primary-color);
       margin-top: 0;
       font-size: 1.5rem;
+    }
+
+    /* Start Overlay Screen */
+    .start-screen {
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 24px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .start-screen h2 {
+      color: var(--primary-color);
+      margin-top: 0;
+    }
+
+    .start-screen .form-group {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+
+    .start-btn {
+      background: #059669;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .start-btn:hover {
+      background: #047857;
+    }
+
+    /* Timer Bar */
+    .timer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #334155;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .timer-display {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 20px;
+      color: #00ff66;
+      background: #0f172a;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #475569;
+    }
+
+    .timer-display.warning {
+      color: #ff4444;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
     }
 
     .tabs {
@@ -106,20 +179,26 @@
       font-size: 1.1rem;
     }
 
-    /* Centered & Distributed Workbench Layout */
     .workbench {
       position: relative;
-      height: 420px;
+      height: 440px;
       background: #e2e8f0;
       border-radius: 10px;
       border: 2px solid #cbd5e1;
       display: flex;
       justify-content: space-evenly;
       align-items: flex-end;
-      padding-bottom: 25px;
-      padding-left: 80px; /* Offset space for stacked solids on the left */
+      padding-bottom: 20px;
+      padding-top: 20px;
+      padding-left: 80px;
       overflow: hidden;
       touch-action: none;
+    }
+
+    .workbench.liquid-workbench {
+      padding-left: 0;
+      justify-content: center;
+      align-items: center;
     }
 
     .balance-container {
@@ -210,13 +289,13 @@
     }
 
     .cylinder {
-      width: 75px;
-      height: 350px;
+      width: 70px;
+      height: 310px;
       border: 3px solid #64748b;
       border-top: none;
       border-radius: 0 0 12px 12px;
       position: relative;
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.75);
       overflow: hidden;
       box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
     }
@@ -394,19 +473,6 @@
       font-size: 1.05rem;
     }
 
-    .student-info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 15px;
-    }
-
-    @media (max-width: 600px) {
-      .student-info-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
     table.data-table {
       width: 100%;
       border-collapse: collapse;
@@ -469,6 +535,30 @@
       font-size: 14px;
       background: white;
     }
+
+    .locked-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      border-radius: 12px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .locked-overlay h2 {
+      color: #ef4444;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -476,202 +566,215 @@
 <div class="container">
   <h1>Virtual Density Lab</h1>
 
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchLab('solid')">1. Density of Solids</button>
-    <button class="tab-btn" onclick="switchLab('liquid')">2. Density of Liquids</button>
+  <!-- SCREEN 1: Registration Form -->
+  <div id="start-screen" class="start-screen">
+    <h2>Student Registration</h2>
+    <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">
+      Enter your details to begin. You will have <strong>60 minutes</strong> to complete all density observations and submit your findings.
+    </p>
+    <form id="register-form" onsubmit="startExperiment(event)">
+      <div class="form-group">
+        <label for="global-student-name">Full Name <span class="req">*</span></label>
+        <input type="text" id="global-student-name" placeholder="Enter your full name" required>
+      </div>
+      <div class="form-group">
+        <label for="global-student-class">Class <span class="req">*</span></label>
+        <input type="text" id="global-student-class" placeholder="e.g. 7A / 9B" required>
+      </div>
+      <button type="submit" class="start-btn">Start Experiment (60 Min)</button>
+    </form>
   </div>
 
-  <!-- ==================== TAB 1: SOLID DENSITY ==================== -->
-  <div id="solid-lab" class="lab-section active">
+  <!-- SCREEN 2: Main Workspace & Navigation (Initially Hidden) -->
+  <div id="lab-workspace" style="display: none;">
     
-    <div class="lab-top-row">
-      <div class="panel">
-        <h3>Laboratory Guide</h3>
-        <p style="font-size: 13px; line-height: 1.4;">
-          Explore the equipment to measure the mass and volume of each solid object, then calculate density and record your readings in the table below.
-        </p>
-        
-        <button class="action-btn" id="pour-btn">Pour Water (+1 mL)</button>
-        <button class="action-btn reset-btn" onclick="emptyCylinder()">Empty Cylinder</button>
-        <button class="action-btn reset-btn" onclick="resetSolids()">Reset Workspace</button>
+    <!-- Top Timer & Student Information Bar -->
+    <div class="timer-bar">
+      <div>
+        Student: <span id="display-student-name" style="color: #60a5fa;">-</span> | 
+        Class: <span id="display-student-class" style="color: #60a5fa;">-</span>
       </div>
-
-      <div class="workbench" id="solid-workbench">
-        <div class="pour-stream" id="pour-stream"></div>
-
-        <div id="glass-water" class="draggable-item">
-          Water Pitcher
-        </div>
-
-        <div id="obj-stone" class="draggable-solid draggable-item" style="top: 15px; left: 20px;">Stone</div>
-        <div id="obj-iron" class="draggable-solid draggable-item" style="top: 70px; left: 20px;">Iron</div>
-        <div id="obj-wood" class="draggable-solid draggable-item" style="top: 125px; left: 20px;">Wood</div>
-
-        <div class="balance-container" id="solid-balance">
-          <div class="balance-pan" id="solid-pan"></div>
-          <div class="balance-base">
-            <div class="digital-display" id="solid-display">0.00 g</div>
-          </div>
-        </div>
-
-        <div class="cylinder-container" id="solid-cylinder">
-          <div class="cylinder">
-            <span class="cylinder-header">mL</span>
-            <div class="water-fill" id="solid-water"></div>
-            <div class="ticks" id="solid-ticks"></div>
-          </div>
-          <div class="cylinder-base"></div>
-        </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span>Time Remaining:</span>
+        <div class="timer-display" id="timer-display">60:00</div>
       </div>
     </div>
 
-    <!-- Student Data Table: Solids -->
-    <form id="solid-form" onsubmit="submitSolidData(event)">
-      <div class="table-container">
-        <h3>Data Table 1: Solid Objects Observation</h3>
-        
-        <div class="student-info-grid">
-          <div>
-            <label for="solid-student-name">Student Name <span class="req">*</span></label>
-            <input type="text" id="solid-student-name" placeholder="Enter your full name" required>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchLab('solid')">1. Density of Solids</button>
+      <button class="tab-btn" onclick="switchLab('liquid')">2. Density of Liquids</button>
+    </div>
+
+    <!-- ==================== TAB 1: SOLID DENSITY ==================== -->
+    <div id="solid-lab" class="lab-section active">
+      
+      <div class="lab-top-row">
+        <div class="panel">
+          <h3>Laboratory Guide</h3>
+          <p style="font-size: 13px; line-height: 1.4;">
+            Explore the equipment to measure the mass and volume of each solid object, then calculate density and record your readings in the table below.
+          </p>
+          
+          <button class="action-btn" id="pour-btn">Pour Water (+1 mL)</button>
+          <button class="action-btn reset-btn" onclick="emptyCylinder()">Empty Cylinder</button>
+          <button class="action-btn reset-btn" onclick="resetSolids()">Reset Workspace</button>
+        </div>
+
+        <div class="workbench" id="solid-workbench">
+          <div class="pour-stream" id="pour-stream"></div>
+
+          <div id="glass-water" class="draggable-item">
+            Water Pitcher
           </div>
-          <div>
-            <label for="solid-student-class">Class <span class="req">*</span></label>
-            <input type="text" id="solid-student-class" placeholder="e.g. 7A / 9B" required>
+
+          <div id="obj-stone" class="draggable-solid draggable-item" style="top: 15px; left: 20px;">Stone</div>
+          <div id="obj-iron" class="draggable-solid draggable-item" style="top: 70px; left: 20px;">Iron</div>
+          <div id="obj-wood" class="draggable-solid draggable-item" style="top: 125px; left: 20px;">Wood</div>
+
+          <div class="balance-container" id="solid-balance">
+            <div class="balance-pan" id="solid-pan"></div>
+            <div class="balance-base">
+              <div class="digital-display" id="solid-display">0.00 g</div>
+            </div>
           </div>
-        </div>
 
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Object Name</th>
-              <th>Mass (g) <span class="req">*</span></th>
-              <th>Volume (mL) <span class="req">*</span></th>
-              <th>Density (g/mL) <span class="req">*</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Stone</strong></td>
-              <td><input type="number" id="solid-m-stone" step="0.01" placeholder="0.00" required></td>
-              <td><input type="number" id="solid-v-stone" step="0.1" placeholder="0.0" required></td>
-              <td><input type="number" id="solid-d-stone" step="0.01" placeholder="0.00" required></td>
-            </tr>
-            <tr>
-              <td><strong>Iron</strong></td>
-              <td><input type="number" id="solid-m-iron" step="0.01" placeholder="0.00" required></td>
-              <td><input type="number" id="solid-v-iron" step="0.1" placeholder="0.0" required></td>
-              <td><input type="number" id="solid-d-iron" step="0.01" placeholder="0.00" required></td>
-            </tr>
-            <tr>
-              <td><strong>Wood</strong></td>
-              <td><input type="number" id="solid-m-wood" step="0.01" placeholder="0.00" required></td>
-              <td><input type="number" id="solid-v-wood" step="0.1" placeholder="0.0" required></td>
-              <td><input type="number" id="solid-d-wood" step="0.01" placeholder="0.00" required></td>
-            </tr>
-          </tbody>
-        </table>
-        <button type="submit" class="action-btn submit-btn" id="solid-submit-btn">Submit Solid Data to Google Sheets</button>
-      </div>
-    </form>
-
-  </div>
-
-  <!-- ==================== TAB 2: LIQUID DENSITY ==================== -->
-  <div id="liquid-lab" class="lab-section">
-    
-    <div class="lab-top-row">
-      <div class="panel">
-        <h3>Laboratory Guide</h3>
-        <p style="font-size: 13px; line-height: 1.4;">
-          Use the controls to measure the mass and volume of each liquid material, then calculate density and record your readings in the table below.
-        </p>
-
-        <div class="form-group">
-          <label for="liquid-type">Select Liquid Material:</label>
-          <select id="liquid-type" onchange="updateLiquidProperties()">
-            <option value="water">Liquid A</option>
-            <option value="oil">Liquid B</option>
-            <option value="glycerin">Liquid C</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="liquid-volume-slider">Volume: <span id="vol-slider-val">0</span> mL</label>
-          <input type="range" id="liquid-volume-slider" min="0" max="100" value="0" step="1" oninput="updateLiquidProperties()">
-        </div>
-
-        <button class="action-btn reset-btn" onclick="tareLiquidScale()">TARE / ZERO</button>
-      </div>
-
-      <div class="workbench" style="padding-left: 0;">
-        <div class="balance-container">
-          <div class="cylinder-container">
+          <div class="cylinder-container" id="solid-cylinder">
             <div class="cylinder">
               <span class="cylinder-header">mL</span>
-              <div class="water-fill" id="liquid-water" style="height: 0px;"></div>
-              <div class="ticks" id="liquid-ticks"></div>
+              <div class="water-fill" id="solid-water"></div>
+              <div class="ticks" id="solid-ticks"></div>
             </div>
             <div class="cylinder-base"></div>
           </div>
-          <div class="balance-pan"></div>
-          <div class="balance-base">
-            <div class="digital-display" id="liquid-display">120.00 g</div>
-            <button class="action-btn reset-btn" onclick="tareLiquidScale()" style="margin-top: 5px;">TARE / ZERO</button>
-          </div>
         </div>
       </div>
+
+      <!-- Student Data Table: Solids -->
+      <form id="solid-form" onsubmit="submitSolidData(event)">
+        <div class="table-container">
+          <h3>Data Table 1: Solid Objects Observation</h3>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Object Name</th>
+                <th>Mass (g) <span class="req">*</span></th>
+                <th>Volume (mL) <span class="req">*</span></th>
+                <th>Density (g/mL) <span class="req">*</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Stone</strong></td>
+                <td><input type="number" id="solid-m-stone" step="0.01" placeholder="0.00" required></td>
+                <td><input type="number" id="solid-v-stone" step="0.1" placeholder="0.0" required></td>
+                <td><input type="number" id="solid-d-stone" step="0.01" placeholder="0.00" required></td>
+              </tr>
+              <tr>
+                <td><strong>Iron</strong></td>
+                <td><input type="number" id="solid-m-iron" step="0.01" placeholder="0.00" required></td>
+                <td><input type="number" id="solid-v-iron" step="0.1" placeholder="0.0" required></td>
+                <td><input type="number" id="solid-d-iron" step="0.01" placeholder="0.00" required></td>
+              </tr>
+              <tr>
+                <td><strong>Wood</strong></td>
+                <td><input type="number" id="solid-m-wood" step="0.01" placeholder="0.00" required></td>
+                <td><input type="number" id="solid-v-wood" step="0.1" placeholder="0.0" required></td>
+                <td><input type="number" id="solid-d-wood" step="0.01" placeholder="0.00" required></td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="submit" class="action-btn submit-btn" id="solid-submit-btn">Submit Solid Data to Google Sheets</button>
+        </div>
+      </form>
+
     </div>
 
-    <!-- Student Data Table: Liquids -->
-    <form id="liquid-form" onsubmit="submitLiquidData(event)">
-      <div class="table-container">
-        <h3>Data Table 2: Liquid Material Observation</h3>
-        
-        <div class="student-info-grid">
-          <div>
-            <label for="liq-student-name">Student Name <span class="req">*</span></label>
-            <input type="text" id="liq-student-name" placeholder="Enter your full name" required>
+    <!-- ==================== TAB 2: LIQUID DENSITY ==================== -->
+    <div id="liquid-lab" class="lab-section">
+      
+      <div class="lab-top-row">
+        <div class="panel">
+          <h3>Laboratory Guide</h3>
+          <p style="font-size: 13px; line-height: 1.4;">
+            Use the controls to measure the mass and volume of each liquid material, then calculate density and record your readings in the table below.
+          </p>
+
+          <div class="form-group">
+            <label for="liquid-type">Select Liquid Material:</label>
+            <select id="liquid-type" onchange="updateLiquidProperties()">
+              <option value="water">Liquid A</option>
+              <option value="oil">Liquid B</option>
+              <option value="glycerin">Liquid C</option>
+            </select>
           </div>
-          <div>
-            <label for="liq-student-class">Class <span class="req">*</span></label>
-            <input type="text" id="liq-student-class" placeholder="e.g. 7A / 9B" required>
+
+          <div class="form-group">
+            <label for="liquid-volume-slider">Volume: <span id="vol-slider-val">0</span> mL</label>
+            <input type="range" id="liquid-volume-slider" min="0" max="100" value="0" step="1" oninput="updateLiquidProperties()">
           </div>
+
+          <button class="action-btn reset-btn" onclick="tareLiquidScale()">TARE / ZERO</button>
         </div>
 
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Liquid Type</th>
-              <th>Mass (g) <span class="req">*</span></th>
-              <th>Volume (mL) <span class="req">*</span></th>
-              <th>Density (g/mL) <span class="req">*</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Liquid A</strong></td>
-              <td><input type="number" id="liq-m-a" step="0.01" placeholder="0.00" required></td>
-              <td><input type="number" id="liq-v-a" step="0.1" placeholder="0.0" required></td>
-              <td><input type="number" id="liq-d-a" step="0.01" placeholder="0.00" required></td>
-            </tr>
-            <tr>
-              <td><strong>Liquid B</strong></td>
-              <td><input type="number" id="liq-m-b" step="0.01" placeholder="0.00" required></td>
-              <td><input type="number" id="liq-v-b" step="0.1" placeholder="0.0" required></td>
-              <td><input type="number" id="liq-d-b" step="0.01" placeholder="0.00" required></td>
-            </tr>
-            <tr>
-              <td><strong>Liquid C</strong></td>
-              <td><input type="number" id="liq-m-c" step="0.01" placeholder="0.00" required></td>
-              <td><input type="number" id="liq-v-c" step="0.1" placeholder="0.0" required></td>
-              <td><input type="number" id="liq-d-c" step="0.01" placeholder="0.00" required></td>
-            </tr>
-          </tbody>
-        </table>
-        <button type="submit" class="action-btn submit-btn" id="liquid-submit-btn">Submit Liquid Data to Google Sheets</button>
+        <div class="workbench liquid-workbench">
+          <div class="balance-container">
+            <div class="cylinder-container">
+              <div class="cylinder">
+                <span class="cylinder-header">mL</span>
+                <div class="water-fill" id="liquid-water" style="height: 0px;"></div>
+                <div class="ticks" id="liquid-ticks"></div>
+              </div>
+            </div>
+            <div class="balance-pan"></div>
+            <div class="balance-base">
+              <div class="digital-display" id="liquid-display">120.00 g</div>
+              <button class="action-btn reset-btn" onclick="tareLiquidScale()" style="margin-top: 5px;">TARE / ZERO</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </form>
+
+      <!-- Student Data Table: Liquids -->
+      <form id="liquid-form" onsubmit="submitLiquidData(event)">
+        <div class="table-container">
+          <h3>Data Table 2: Liquid Material Observation</h3>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Liquid Type</th>
+                <th>Mass (g) <span class="req">*</span></th>
+                <th>Volume (mL) <span class="req">*</span></th>
+                <th>Density (g/mL) <span class="req">*</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Liquid A</strong></td>
+                <td><input type="number" id="liq-m-a" step="0.01" placeholder="0.00" required></td>
+                <td><input type="number" id="liq-v-a" step="0.1" placeholder="0.0" required></td>
+                <td><input type="number" id="liq-d-a" step="0.01" placeholder="0.00" required></td>
+              </tr>
+              <tr>
+                <td><strong>Liquid B</strong></td>
+                <td><input type="number" id="liq-m-b" step="0.01" placeholder="0.00" required></td>
+                <td><input type="number" id="liq-v-b" step="0.1" placeholder="0.0" required></td>
+                <td><input type="number" id="liq-d-b" step="0.01" placeholder="0.00" required></td>
+              </tr>
+              <tr>
+                <td><strong>Liquid C</strong></td>
+                <td><input type="number" id="liq-m-c" step="0.01" placeholder="0.00" required></td>
+                <td><input type="number" id="liq-v-c" step="0.1" placeholder="0.0" required></td>
+                <td><input type="number" id="liq-d-c" step="0.01" placeholder="0.00" required></td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="submit" class="action-btn submit-btn" id="liquid-submit-btn">Submit Liquid Data to Google Sheets</button>
+        </div>
+      </form>
+
+    </div>
 
   </div>
 
@@ -680,6 +783,106 @@
 <script>
   // GOOGLE APPS SCRIPT WEB APP URL INTEGRATED
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3j64_bbmZaB0uGN4KMTAa3jJz5mzZbCVPxvCLm4w0hg8XWWRZaofzTTIjvxMWqPrG/exec";
+
+  // --- GLOBAL TIMER & STUDENT STATE ---
+  const LAB_DURATION_MINUTES = 60;
+  let timerInterval = null;
+  let studentName = "";
+  let studentClass = "";
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedStartTime = localStorage.getItem('density_lab_start_time');
+    const savedName = localStorage.getItem('density_lab_student_name');
+    const savedClass = localStorage.getItem('density_lab_student_class');
+
+    if (savedStartTime && savedName && savedClass) {
+      studentName = savedName;
+      studentClass = savedClass;
+      initLabWorkspace();
+    }
+  });
+
+  function startExperiment(e) {
+    e.preventDefault();
+    studentName = document.getElementById('global-student-name').value.trim();
+    studentClass = document.getElementById('global-student-class').value.trim();
+
+    if (!studentName || !studentClass) return;
+
+    const startTime = Date.now();
+    localStorage.setItem('density_lab_start_time', startTime.toString());
+    localStorage.setItem('density_lab_student_name', studentName);
+    localStorage.setItem('density_lab_student_class', studentClass);
+
+    initLabWorkspace();
+  }
+
+  function initLabWorkspace() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('lab-workspace').style.display = 'block';
+
+    document.getElementById('display-student-name').textContent = studentName;
+    document.getElementById('display-student-class').textContent = studentClass;
+
+    startCountdownTimer();
+  }
+
+  function startCountdownTimer() {
+    const startTime = parseInt(localStorage.getItem('density_lab_start_time'), 10);
+    const durationMs = LAB_DURATION_MINUTES * 60 * 1000;
+
+    function updateClock() {
+      const elapsedMs = Date.now() - startTime;
+      const remainingMs = durationMs - elapsedMs;
+
+      if (remainingMs <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('timer-display').textContent = "00:00";
+        expireExperiment();
+        return;
+      }
+
+      const totalSeconds = Math.floor(remainingMs / 1000);
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+
+      const formattedMins = String(mins).padStart(2, '0');
+      const formattedSecs = String(secs).padStart(2, '0');
+
+      const timerElem = document.getElementById('timer-display');
+      timerElem.textContent = `${formattedMins}:${formattedSecs}`;
+
+      if (mins < 5) {
+        timerElem.classList.add('warning');
+      }
+    }
+
+    updateClock();
+    timerInterval = setInterval(updateClock, 1000);
+  }
+
+  function expireExperiment() {
+    const overlay = document.createElement('div');
+    overlay.className = 'locked-overlay';
+    overlay.innerHTML = `
+      <h2>TIME IS UP!</h2>
+      <p style="font-size: 16px; max-width: 400px; line-height: 1.5;">
+        The 60-minute time limit for this virtual density lab has expired. Your inputs have been recorded.
+      </p>
+    `;
+    document.querySelector('.container').appendChild(overlay);
+
+    autoSubmitOnTimeUp();
+  }
+
+  function autoSubmitOnTimeUp() {
+    if (val('solid-m-stone') !== '0') {
+      submitSolidData(new Event('submit'));
+    }
+    if (val('liq-m-a') !== '0') {
+      submitLiquidData(new Event('submit'));
+    }
+  }
 
   // --- DATA & STATE ---
   const solidData = {
@@ -736,7 +939,7 @@
         tick.className = 'tick';
       }
 
-      tick.style.bottom = (ml * 3) + 'px';
+      tick.style.bottom = (ml * 2.8) + 'px';
       ticksContainer.appendChild(tick);
     }
   }
@@ -885,7 +1088,7 @@
       }
     });
 
-    document.getElementById('solid-water').style.height = (currentVolume * 3).toFixed(1) + 'px';
+    document.getElementById('solid-water').style.height = (currentVolume * 2.8).toFixed(1) + 'px';
   }
 
   function isOverlapping(rect1, rect2) {
@@ -950,7 +1153,7 @@
     const data = liquidsData[liquidType];
     const waterElement = document.getElementById('liquid-water');
 
-    waterElement.style.height = (volume * 3) + 'px';
+    waterElement.style.height = (volume * 2.8) + 'px';
     waterElement.style.backgroundColor = data.color;
     waterElement.style.borderTopColor = data.border;
 
@@ -971,7 +1174,7 @@
 
   // --- SUBMISSION LOGIC FOR GOOGLE SHEETS ---
   function submitSolidData(e) {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
 
     const btn = document.getElementById('solid-submit-btn');
     btn.disabled = true;
@@ -979,8 +1182,8 @@
 
     const payload = {
       type: "solid",
-      studentName: document.getElementById('solid-student-name').value,
-      studentClass: document.getElementById('solid-student-class').value,
+      studentName: studentName,
+      studentClass: studentClass,
       records: [
         { objectName: "Stone", mass: val('solid-m-stone'), volume: val('solid-v-stone'), density: val('solid-d-stone') },
         { objectName: "Iron", mass: val('solid-m-iron'), volume: val('solid-v-iron'), density: val('solid-d-iron') },
@@ -1007,7 +1210,7 @@
   }
 
   function submitLiquidData(e) {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
 
     const btn = document.getElementById('liquid-submit-btn');
     btn.disabled = true;
@@ -1015,8 +1218,8 @@
 
     const payload = {
       type: "liquid",
-      studentName: document.getElementById('liq-student-name').value,
-      studentClass: document.getElementById('liq-student-class').value,
+      studentName: studentName,
+      studentClass: studentClass,
       records: [
         { liquidType: "Liquid A", mass: val('liq-m-a'), volume: val('liq-v-a'), density: val('liq-d-a') },
         { liquidType: "Liquid B", mass: val('liq-m-b'), volume: val('liq-v-b'), density: val('liq-d-b') },
