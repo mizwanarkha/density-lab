@@ -106,6 +106,7 @@
       font-size: 1.1rem;
     }
 
+    /* Centered & Distributed Workbench Layout */
     .workbench {
       position: relative;
       height: 420px;
@@ -113,9 +114,10 @@
       border-radius: 10px;
       border: 2px solid #cbd5e1;
       display: flex;
-      justify-space: space-around;
+      justify-content: space-evenly;
       align-items: flex-end;
-      padding-bottom: 15px;
+      padding-bottom: 25px;
+      padding-left: 80px; /* Offset space for stacked solids on the left */
       overflow: hidden;
       touch-action: none;
     }
@@ -125,6 +127,7 @@
       flex-direction: column;
       align-items: center;
       width: 140px;
+      z-index: 2;
     }
 
     .balance-pan {
@@ -203,6 +206,7 @@
       flex-direction: column;
       align-items: center;
       position: relative;
+      z-index: 2;
     }
 
     .cylinder {
@@ -237,7 +241,6 @@
     .pour-stream {
       position: absolute;
       top: 60px;
-      right: 170px;
       width: 4px;
       height: 240px;
       background: rgba(56, 189, 248, 0.8);
@@ -298,8 +301,8 @@
       border: 3px solid #0284c7;
       border-radius: 4px 4px 10px 10px;
       position: absolute;
-      top: 200px;
-      left: 15px;
+      top: 180px;
+      left: 20px;
       cursor: grab;
       touch-action: none;
       z-index: 10;
@@ -485,7 +488,7 @@
       <div class="panel">
         <h3>Laboratory Guide</h3>
         <p style="font-size: 13px; line-height: 1.4;">
-          Explore the equipment to measure the mass and volume of each solid object, then record your readings in the table below.
+          Explore the equipment to measure the mass and volume of each solid object, then calculate density and record your readings in the table below.
         </p>
         
         <button class="action-btn" id="pour-btn">Pour Water (+1 mL)</button>
@@ -500,9 +503,9 @@
           Water Pitcher
         </div>
 
-        <div id="obj-stone" class="draggable-solid draggable-item" style="top: 15px; left: 15px;">Stone</div>
-        <div id="obj-iron" class="draggable-solid draggable-item" style="top: 75px; left: 15px;">Iron</div>
-        <div id="obj-wood" class="draggable-solid draggable-item" style="top: 135px; left: 15px;">Wood</div>
+        <div id="obj-stone" class="draggable-solid draggable-item" style="top: 15px; left: 20px;">Stone</div>
+        <div id="obj-iron" class="draggable-solid draggable-item" style="top: 70px; left: 20px;">Iron</div>
+        <div id="obj-wood" class="draggable-solid draggable-item" style="top: 125px; left: 20px;">Wood</div>
 
         <div class="balance-container" id="solid-balance">
           <div class="balance-pan" id="solid-pan"></div>
@@ -544,6 +547,7 @@
               <th>Object Name</th>
               <th>Mass (g) <span class="req">*</span></th>
               <th>Volume (mL) <span class="req">*</span></th>
+              <th>Density (g/mL) <span class="req">*</span></th>
             </tr>
           </thead>
           <tbody>
@@ -551,16 +555,19 @@
               <td><strong>Stone</strong></td>
               <td><input type="number" id="solid-m-stone" step="0.01" placeholder="0.00" required></td>
               <td><input type="number" id="solid-v-stone" step="0.1" placeholder="0.0" required></td>
+              <td><input type="number" id="solid-d-stone" step="0.01" placeholder="0.00" required></td>
             </tr>
             <tr>
               <td><strong>Iron</strong></td>
               <td><input type="number" id="solid-m-iron" step="0.01" placeholder="0.00" required></td>
               <td><input type="number" id="solid-v-iron" step="0.1" placeholder="0.0" required></td>
+              <td><input type="number" id="solid-d-iron" step="0.01" placeholder="0.00" required></td>
             </tr>
             <tr>
               <td><strong>Wood</strong></td>
               <td><input type="number" id="solid-m-wood" step="0.01" placeholder="0.00" required></td>
               <td><input type="number" id="solid-v-wood" step="0.1" placeholder="0.0" required></td>
+              <td><input type="number" id="solid-d-wood" step="0.01" placeholder="0.00" required></td>
             </tr>
           </tbody>
         </table>
@@ -577,7 +584,7 @@
       <div class="panel">
         <h3>Laboratory Guide</h3>
         <p style="font-size: 13px; line-height: 1.4;">
-          Use the controls to measure the mass and volume of each liquid material, then record your readings in the table below.
+          Use the controls to measure the mass and volume of each liquid material, then calculate density and record your readings in the table below.
         </p>
 
         <div class="form-group">
@@ -597,7 +604,7 @@
         <button class="action-btn reset-btn" onclick="tareLiquidScale()">TARE / ZERO</button>
       </div>
 
-      <div class="workbench">
+      <div class="workbench" style="padding-left: 0;">
         <div class="balance-container">
           <div class="cylinder-container">
             <div class="cylinder">
@@ -638,6 +645,7 @@
               <th>Liquid Type</th>
               <th>Mass (g) <span class="req">*</span></th>
               <th>Volume (mL) <span class="req">*</span></th>
+              <th>Density (g/mL) <span class="req">*</span></th>
             </tr>
           </thead>
           <tbody>
@@ -645,16 +653,19 @@
               <td><strong>Liquid A</strong></td>
               <td><input type="number" id="liq-m-a" step="0.01" placeholder="0.00" required></td>
               <td><input type="number" id="liq-v-a" step="0.1" placeholder="0.0" required></td>
+              <td><input type="number" id="liq-d-a" step="0.01" placeholder="0.00" required></td>
             </tr>
             <tr>
               <td><strong>Liquid B</strong></td>
               <td><input type="number" id="liq-m-b" step="0.01" placeholder="0.00" required></td>
               <td><input type="number" id="liq-v-b" step="0.1" placeholder="0.0" required></td>
+              <td><input type="number" id="liq-d-b" step="0.01" placeholder="0.00" required></td>
             </tr>
             <tr>
               <td><strong>Liquid C</strong></td>
               <td><input type="number" id="liq-m-c" step="0.01" placeholder="0.00" required></td>
               <td><input type="number" id="liq-v-c" step="0.1" placeholder="0.0" required></td>
+              <td><input type="number" id="liq-d-c" step="0.01" placeholder="0.00" required></td>
             </tr>
           </tbody>
         </table>
@@ -668,7 +679,7 @@
 
 <script>
   // GOOGLE APPS SCRIPT WEB APP URL INTEGRATED
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJrkh8ps1WdqnQAI2OLlorwT_W8zhcTeD9fpMpOsc9-fVIyEMqlNsJDKpubwt5WD7S/exec";
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3j64_bbmZaB0uGN4KMTAa3jJz5mzZbCVPxvCLm4w0hg8XWWRZaofzTTIjvxMWqPrG/exec";
 
   // --- DATA & STATE ---
   const solidData = {
@@ -744,7 +755,15 @@
   function startPouring() {
     if (pourInterval) return;
     addWaterUnit();
-    document.getElementById('pour-stream').style.display = 'block';
+    
+    const stream = document.getElementById('pour-stream');
+    const glass = document.getElementById('glass-water');
+    const workbench = document.getElementById('solid-workbench').getBoundingClientRect();
+    const glassRect = glass.getBoundingClientRect();
+    
+    stream.style.left = (glassRect.right - workbench.left - 12) + 'px';
+    stream.style.display = 'block';
+    
     pourInterval = setInterval(addWaterUnit, 80);
   }
 
@@ -860,7 +879,6 @@
     document.querySelectorAll('.draggable-solid').forEach(elem => {
       const elemRect = elem.getBoundingClientRect();
       if (isOverlapping(elemRect, cylinder)) {
-        // ONLY add object volume if water has actually been poured in
         if (pouredWaterVolume > 0) {
           currentVolume += solidData[elem.id].volume;
         }
@@ -898,8 +916,8 @@
 
   function resetGlassPosition() {
     const glass = document.getElementById('glass-water');
-    glass.style.left = '15px';
-    glass.style.top = '200px';
+    glass.style.left = '20px';
+    glass.style.top = '180px';
   }
 
   function emptyCylinder() {
@@ -908,14 +926,14 @@
   }
 
   function resetSolids() {
-    document.getElementById('obj-stone').style.left = '15px';
+    document.getElementById('obj-stone').style.left = '20px';
     document.getElementById('obj-stone').style.top = '15px';
 
-    document.getElementById('obj-iron').style.left = '15px';
-    document.getElementById('obj-iron').style.top = '75px';
+    document.getElementById('obj-iron').style.left = '20px';
+    document.getElementById('obj-iron').style.top = '70px';
 
-    document.getElementById('obj-wood').style.left = '15px';
-    document.getElementById('obj-wood').style.top = '135px';
+    document.getElementById('obj-wood').style.left = '20px';
+    document.getElementById('obj-wood').style.top = '125px';
 
     resetGlassPosition();
     emptyCylinder();
@@ -964,9 +982,9 @@
       studentName: document.getElementById('solid-student-name').value,
       studentClass: document.getElementById('solid-student-class').value,
       records: [
-        { objectName: "Stone", mass: val('solid-m-stone'), volume: val('solid-v-stone') },
-        { objectName: "Iron", mass: val('solid-m-iron'), volume: val('solid-v-iron') },
-        { objectName: "Wood", mass: val('solid-m-wood'), volume: val('solid-v-wood') }
+        { objectName: "Stone", mass: val('solid-m-stone'), volume: val('solid-v-stone'), density: val('solid-d-stone') },
+        { objectName: "Iron", mass: val('solid-m-iron'), volume: val('solid-v-iron'), density: val('solid-d-iron') },
+        { objectName: "Wood", mass: val('solid-m-wood'), volume: val('solid-v-wood'), density: val('solid-d-wood') }
       ]
     };
 
@@ -1000,9 +1018,9 @@
       studentName: document.getElementById('liq-student-name').value,
       studentClass: document.getElementById('liq-student-class').value,
       records: [
-        { liquidType: "Liquid A", mass: val('liq-m-a'), volume: val('liq-v-a') },
-        { liquidType: "Liquid B", mass: val('liq-m-b'), volume: val('liq-v-b') },
-        { liquidType: "Liquid C", mass: val('liq-m-c'), volume: val('liq-v-c') }
+        { liquidType: "Liquid A", mass: val('liq-m-a'), volume: val('liq-v-a'), density: val('liq-d-a') },
+        { liquidType: "Liquid B", mass: val('liq-m-b'), volume: val('liq-v-b'), density: val('liq-d-b') },
+        { liquidType: "Liquid C", mass: val('liq-m-c'), volume: val('liq-v-c'), density: val('liq-d-c') }
       ]
     };
 
