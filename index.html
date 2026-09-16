@@ -16,7 +16,7 @@
     * {
       box-sizing: border-box;
       user-select: none;
-      -webkit-user-select: none; /* iOS Safari */
+      -webkit-user-select: none;
       -webkit-touch-callout: none;
     }
 
@@ -30,7 +30,7 @@
     }
 
     .container {
-      max-width: 950px;
+      max-width: 1000px;
       margin: 0 auto;
       background: var(--card-bg);
       padding: 15px;
@@ -76,18 +76,23 @@
     }
 
     .lab-section.active {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .lab-top-row {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 240px 1fr;
       gap: 15px;
     }
 
     @media (max-width: 768px) {
-      .lab-section.active {
+      .lab-top-row {
         grid-template-columns: 1fr;
       }
     }
 
-    /* Panels */
     .panel {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -101,22 +106,20 @@
       font-size: 1.1rem;
     }
 
-    /* Workbench Area */
     .workbench {
       position: relative;
-      height: 460px;
+      height: 420px;
       background: #e2e8f0;
       border-radius: 10px;
       border: 2px solid #cbd5e1;
       display: flex;
-      justify-content: space-around;
+      justify-space: space-around;
       align-items: flex-end;
       padding-bottom: 15px;
       overflow: hidden;
-      touch-action: none; /* Prevents scrolling while interacting inside workbench */
+      touch-action: none;
     }
 
-    /* Electronic Balance */
     .balance-container {
       display: flex;
       flex-direction: column;
@@ -158,19 +161,43 @@
       text-align: right;
     }
 
-    .tare-btn {
-      margin-top: 6px;
-      padding: 6px 12px;
+    .action-btn {
+      margin-top: 8px;
+      padding: 8px 12px;
       font-size: 12px;
-      background: #64748b;
+      font-weight: bold;
+      background: #3b82f6;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       touch-action: manipulation;
+      width: 100%;
     }
 
-    /* Graduated Cylinder */
+    .action-btn:active {
+      background: #1d4ed8;
+    }
+
+    .reset-btn {
+      background: #64748b;
+    }
+
+    .reset-btn:hover {
+      background: #475569;
+    }
+
+    .submit-btn {
+      background: #059669;
+      margin-top: 15px;
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+
+    .submit-btn:hover {
+      background: #047857;
+    }
+
     .cylinder-container {
       display: flex;
       flex-direction: column;
@@ -201,13 +228,23 @@
       position: absolute;
       bottom: 0;
       width: 100%;
-      height: 90px;
+      height: 0px;
       background-color: rgba(56, 189, 248, 0.6);
       border-top: 2px solid #0284c7;
-      transition: height 0.3s ease;
+      transition: height 0.1s linear;
     }
 
-    /* Scaled Ticks System (0 to 100 mL) */
+    .pour-stream {
+      position: absolute;
+      top: 60px;
+      right: 170px;
+      width: 4px;
+      height: 240px;
+      background: rgba(56, 189, 248, 0.8);
+      display: none;
+      z-index: 5;
+    }
+
     .ticks {
       position: absolute;
       left: 0;
@@ -254,11 +291,44 @@
       color: #475569;
     }
 
-    /* ================= DRAGGABLE OBJECT SHAPES ================= */
+    #glass-water {
+      width: 55px;
+      height: 65px;
+      background: rgba(56, 189, 248, 0.5);
+      border: 3px solid #0284c7;
+      border-radius: 4px 4px 10px 10px;
+      position: absolute;
+      top: 200px;
+      left: 15px;
+      cursor: grab;
+      touch-action: none;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: #0f172a;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    }
+
+    #glass-water::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      width: 10px;
+      height: 10px;
+      border-top: 3px solid #0284c7;
+      border-right: 3px solid #0284c7;
+      transform: rotate(45deg);
+    }
+
     .draggable-solid {
       cursor: grab;
       position: absolute;
-      touch-action: none; /* Prevents iOS/Android swipe gestures when touching object */
+      touch-action: none;
       z-index: 10;
       display: flex;
       align-items: center;
@@ -270,12 +340,11 @@
       transition: transform 0.1s ease;
     }
 
-    .draggable-solid:active {
+    .draggable-solid:active, #glass-water:active {
       cursor: grabbing;
       transform: scale(1.1);
     }
 
-    /* 1. STONE: Irregular Organic Rock Shape */
     #obj-stone {
       width: 48px;
       height: 42px;
@@ -284,7 +353,6 @@
       box-shadow: inset -3px -3px 6px rgba(0,0,0,0.6);
     }
 
-    /* 2. IRON: Metallic Cuboid Block */
     #obj-iron {
       width: 44px;
       height: 44px;
@@ -294,7 +362,6 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 1px 1px 2px rgba(255,255,255,0.8);
     }
 
-    /* 3. WOOD: Cylindrical Log with Grain Circles */
     #obj-wood {
       width: 46px;
       height: 46px;
@@ -310,7 +377,72 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.25), inset 0 0 4px rgba(0,0,0,0.4);
     }
 
-    /* Controls */
+    .table-container {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px;
+      overflow-x: auto;
+    }
+
+    .table-container h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-size: 1.05rem;
+    }
+
+    .student-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .student-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      font-size: 13px;
+    }
+
+    table.data-table th, table.data-table td {
+      border: 1px solid #cbd5e1;
+      padding: 8px;
+      text-align: center;
+    }
+
+    table.data-table th {
+      background-color: #e2e8f0;
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #94a3b8;
+      border-radius: 4px;
+      font-size: 13px;
+      user-select: auto;
+      -webkit-user-select: auto;
+    }
+
+    input[type="number"] {
+      text-align: center;
+    }
+
+    input:focus {
+      border-color: var(--secondary-color);
+      outline: none;
+      background-color: #f0f9ff;
+    }
+
     .form-group {
       margin-bottom: 15px;
     }
@@ -322,6 +454,10 @@
       font-size: 14px;
     }
 
+    label .req {
+      color: #dc2626;
+    }
+
     select, input[type="range"] {
       width: 100%;
       padding: 10px;
@@ -330,12 +466,6 @@
       font-size: 14px;
       background: white;
     }
-
-    ul {
-      padding-left: 18px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
   </style>
 </head>
 <body>
@@ -343,7 +473,6 @@
 <div class="container">
   <h1>Virtual Density Lab</h1>
 
-  <!-- Lab Navigation -->
   <div class="tabs">
     <button class="tab-btn active" onclick="switchLab('solid')">1. Density of Solids</button>
     <button class="tab-btn" onclick="switchLab('liquid')">2. Density of Liquids</button>
@@ -352,97 +481,195 @@
   <!-- ==================== TAB 1: SOLID DENSITY ==================== -->
   <div id="solid-lab" class="lab-section active">
     
-    <!-- Left Panel: Instructions -->
-    <div class="panel">
-      <h3>Instructions (Solids)</h3>
-      <ul>
-        <li>Drag an object to the <strong>balance</strong> to measure its mass.</li>
-        <li>Drag an object into the <strong>measuring cylinder</strong> to see how the water level changes.</li>
-      </ul>
-      <button class="tare-btn" style="width: 100%; padding: 10px; margin-top: 10px;" onclick="resetSolids()">Reset Objects</button>
-    </div>
-
-    <!-- Center Panel: Interactive Workbench -->
-    <div class="workbench" id="solid-workbench">
-      
-      <!-- Objects Palette -->
-      <div id="obj-stone" class="draggable-solid" style="top: 15px; left: 15px;">Stone</div>
-      <div id="obj-iron" class="draggable-solid" style="top: 75px; left: 15px;">Iron</div>
-      <div id="obj-wood" class="draggable-solid" style="top: 135px; left: 15px;">Wood</div>
-
-      <!-- Electronic Balance -->
-      <div class="balance-container" id="solid-balance">
-        <div class="balance-pan" id="solid-pan"></div>
-        <div class="balance-base">
-          <div class="digital-display" id="solid-display">0.00 g</div>
-        </div>
+    <div class="lab-top-row">
+      <div class="panel">
+        <h3>Laboratory Guide</h3>
+        <p style="font-size: 13px; line-height: 1.4;">
+          Explore the equipment to measure the mass and volume of each solid object, then record your readings in the table below.
+        </p>
+        
+        <button class="action-btn" id="pour-btn">Pour Water (+1 mL)</button>
+        <button class="action-btn reset-btn" onclick="emptyCylinder()">Empty Cylinder</button>
+        <button class="action-btn reset-btn" onclick="resetSolids()">Reset Workspace</button>
       </div>
 
-      <!-- Graduated Cylinder -->
-      <div class="cylinder-container" id="solid-cylinder">
-        <div class="cylinder">
-          <span class="cylinder-header">mL</span>
-          <div class="water-fill" id="solid-water"></div>
-          <div class="ticks" id="solid-ticks"></div>
+      <div class="workbench" id="solid-workbench">
+        <div class="pour-stream" id="pour-stream"></div>
+
+        <div id="glass-water" class="draggable-item">
+          Water Pitcher
         </div>
-        <div class="cylinder-base"></div>
+
+        <div id="obj-stone" class="draggable-solid draggable-item" style="top: 15px; left: 15px;">Stone</div>
+        <div id="obj-iron" class="draggable-solid draggable-item" style="top: 75px; left: 15px;">Iron</div>
+        <div id="obj-wood" class="draggable-solid draggable-item" style="top: 135px; left: 15px;">Wood</div>
+
+        <div class="balance-container" id="solid-balance">
+          <div class="balance-pan" id="solid-pan"></div>
+          <div class="balance-base">
+            <div class="digital-display" id="solid-display">0.00 g</div>
+          </div>
+        </div>
+
+        <div class="cylinder-container" id="solid-cylinder">
+          <div class="cylinder">
+            <span class="cylinder-header">mL</span>
+            <div class="water-fill" id="solid-water"></div>
+            <div class="ticks" id="solid-ticks"></div>
+          </div>
+          <div class="cylinder-base"></div>
+        </div>
       </div>
     </div>
+
+    <!-- Student Data Table: Solids -->
+    <form id="solid-form" onsubmit="submitSolidData(event)">
+      <div class="table-container">
+        <h3>Data Table 1: Solid Objects Observation</h3>
+        
+        <div class="student-info-grid">
+          <div>
+            <label for="solid-student-name">Student Name <span class="req">*</span></label>
+            <input type="text" id="solid-student-name" placeholder="Enter your full name" required>
+          </div>
+          <div>
+            <label for="solid-student-class">Class <span class="req">*</span></label>
+            <input type="text" id="solid-student-class" placeholder="e.g. 7A / 9B" required>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Object Name</th>
+              <th>Mass (g) <span class="req">*</span></th>
+              <th>Volume (mL) <span class="req">*</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Stone</strong></td>
+              <td><input type="number" id="solid-m-stone" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="solid-v-stone" step="0.1" placeholder="0.0" required></td>
+            </tr>
+            <tr>
+              <td><strong>Iron</strong></td>
+              <td><input type="number" id="solid-m-iron" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="solid-v-iron" step="0.1" placeholder="0.0" required></td>
+            </tr>
+            <tr>
+              <td><strong>Wood</strong></td>
+              <td><input type="number" id="solid-m-wood" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="solid-v-wood" step="0.1" placeholder="0.0" required></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="submit" class="action-btn submit-btn" id="solid-submit-btn">Submit Solid Data to Google Sheets</button>
+      </div>
+    </form>
+
   </div>
 
   <!-- ==================== TAB 2: LIQUID DENSITY ==================== -->
   <div id="liquid-lab" class="lab-section">
     
-    <!-- Left Panel: Controls & Liquid Selection -->
-    <div class="panel">
-      <h3>Controls (Liquids)</h3>
-      <div class="form-group">
-        <label for="liquid-type">Select Liquid Material:</label>
-        <select id="liquid-type" onchange="updateLiquidProperties()">
-          <option value="water">Liquid A</option>
-          <option value="oil">Liquid B</option>
-          <option value="glycerin">Liquid C</option>
-        </select>
+    <div class="lab-top-row">
+      <div class="panel">
+        <h3>Laboratory Guide</h3>
+        <p style="font-size: 13px; line-height: 1.4;">
+          Use the controls to measure the mass and volume of each liquid material, then record your readings in the table below.
+        </p>
+
+        <div class="form-group">
+          <label for="liquid-type">Select Liquid Material:</label>
+          <select id="liquid-type" onchange="updateLiquidProperties()">
+            <option value="water">Liquid A</option>
+            <option value="oil">Liquid B</option>
+            <option value="glycerin">Liquid C</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="liquid-volume-slider">Volume: <span id="vol-slider-val">0</span> mL</label>
+          <input type="range" id="liquid-volume-slider" min="0" max="100" value="0" step="1" oninput="updateLiquidProperties()">
+        </div>
+
+        <button class="action-btn reset-btn" onclick="tareLiquidScale()">TARE / ZERO</button>
       </div>
 
-      <div class="form-group">
-        <label for="liquid-volume-slider">Pour Volume: <span id="vol-slider-val">0</span> mL</label>
-        <input type="range" id="liquid-volume-slider" min="0" max="100" value="0" step="1" oninput="updateLiquidProperties()">
-      </div>
-
-      <ul>
-        <li>Use the slider to pour liquid into the cylinder.</li>
-        <li>Use the <strong>TARE / ZERO</strong> button on the balance to reset the mass reading if needed.</li>
-      </ul>
-    </div>
-
-    <!-- Center Panel: Interactive Workbench -->
-    <div class="workbench">
-      
-      <!-- Electronic Balance carrying Cylinder -->
-      <div class="balance-container">
-        <!-- Cylinder placed directly on top of balance -->
-        <div class="cylinder-container">
-          <div class="cylinder">
-            <span class="cylinder-header">mL</span>
-            <div class="water-fill" id="liquid-water" style="height: 0px;"></div>
-            <div class="ticks" id="liquid-ticks"></div>
+      <div class="workbench">
+        <div class="balance-container">
+          <div class="cylinder-container">
+            <div class="cylinder">
+              <span class="cylinder-header">mL</span>
+              <div class="water-fill" id="liquid-water" style="height: 0px;"></div>
+              <div class="ticks" id="liquid-ticks"></div>
+            </div>
+            <div class="cylinder-base"></div>
           </div>
-          <div class="cylinder-base"></div>
-        </div>
-        <div class="balance-pan"></div>
-        <div class="balance-base">
-          <div class="digital-display" id="liquid-display">120.00 g</div>
-          <button class="tare-btn" onclick="tareLiquidScale()">TARE / ZERO</button>
+          <div class="balance-pan"></div>
+          <div class="balance-base">
+            <div class="digital-display" id="liquid-display">120.00 g</div>
+            <button class="action-btn reset-btn" onclick="tareLiquidScale()" style="margin-top: 5px;">TARE / ZERO</button>
+          </div>
         </div>
       </div>
-
     </div>
+
+    <!-- Student Data Table: Liquids -->
+    <form id="liquid-form" onsubmit="submitLiquidData(event)">
+      <div class="table-container">
+        <h3>Data Table 2: Liquid Material Observation</h3>
+        
+        <div class="student-info-grid">
+          <div>
+            <label for="liq-student-name">Student Name <span class="req">*</span></label>
+            <input type="text" id="liq-student-name" placeholder="Enter your full name" required>
+          </div>
+          <div>
+            <label for="liq-student-class">Class <span class="req">*</span></label>
+            <input type="text" id="liq-student-class" placeholder="e.g. 7A / 9B" required>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Liquid Type</th>
+              <th>Mass (g) <span class="req">*</span></th>
+              <th>Volume (mL) <span class="req">*</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Liquid A</strong></td>
+              <td><input type="number" id="liq-m-a" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="liq-v-a" step="0.1" placeholder="0.0" required></td>
+            </tr>
+            <tr>
+              <td><strong>Liquid B</strong></td>
+              <td><input type="number" id="liq-m-b" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="liq-v-b" step="0.1" placeholder="0.0" required></td>
+            </tr>
+            <tr>
+              <td><strong>Liquid C</strong></td>
+              <td><input type="number" id="liq-m-c" step="0.01" placeholder="0.00" required></td>
+              <td><input type="number" id="liq-v-c" step="0.1" placeholder="0.0" required></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="submit" class="action-btn submit-btn" id="liquid-submit-btn">Submit Liquid Data to Google Sheets</button>
+      </div>
+    </form>
+
   </div>
 
 </div>
 
 <script>
+  // YOUR GOOGLE APPS SCRIPT WEB APP URL INTEGRATED BELOW
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJrkh8ps1WdqnQAI2OLlorwT_W8zhcTeD9fpMpOsc9-fVIyEMqlNsJDKpubwt5WD7S/exec";
+
   // --- DATA & STATE ---
   const solidData = {
     'obj-stone': { name: 'Stone', mass: 58.32, volume: 21.6 },
@@ -456,9 +683,10 @@
     glycerin: { density: 1.26, color: 'rgba(236, 72, 153, 0.5)', border: '#db2777' }
   };
 
-  const initialWaterVolume = 30.0;
+  let pouredWaterVolume = 0.0;
   const cylinderEmptyWeight = 120.0;
   let isTared = false;
+  let pourInterval = null;
 
   // --- TAB SWITCHING ---
   function switchLab(type) {
@@ -505,8 +733,36 @@
   createDetailedTicks('solid-ticks');
   createDetailedTicks('liquid-ticks');
 
-  // --- POINTER EVENT DRAG SYSTEM (ANDROID & IOS SUPPORT) ---
-  const draggables = document.querySelectorAll('.draggable-solid');
+  // --- CONTINUOUS REALISTIC POURING ---
+  function addWaterUnit() {
+    if (pouredWaterVolume < 100) {
+      pouredWaterVolume += 1.0;
+      updateSolidCylinderLevel();
+    }
+  }
+
+  function startPouring() {
+    if (pourInterval) return;
+    addWaterUnit();
+    document.getElementById('pour-stream').style.display = 'block';
+    pourInterval = setInterval(addWaterUnit, 80);
+  }
+
+  function stopPouring() {
+    if (pourInterval) {
+      clearInterval(pourInterval);
+      pourInterval = null;
+    }
+    document.getElementById('pour-stream').style.display = 'none';
+  }
+
+  const pourBtn = document.getElementById('pour-btn');
+  pourBtn.addEventListener('pointerdown', startPouring);
+  pourBtn.addEventListener('pointerup', stopPouring);
+  pourBtn.addEventListener('pointerleave', stopPouring);
+
+  // --- POINTER EVENT DRAG SYSTEM ---
+  const draggables = document.querySelectorAll('.draggable-item');
   let activeElement = null;
   let offsetX = 0;
   let offsetY = 0;
@@ -540,6 +796,17 @@
 
     activeElement.style.left = `${left}px`;
     activeElement.style.top = `${top}px`;
+
+    if (activeElement.id === 'glass-water') {
+      const cylinder = document.getElementById('solid-cylinder').getBoundingClientRect();
+      const elemRect = activeElement.getBoundingClientRect();
+
+      if (isOverlapping(elemRect, cylinder)) {
+        startPouring();
+      } else {
+        stopPouring();
+      }
+    }
   }
 
   function stopDrag(e) {
@@ -550,6 +817,7 @@
     activeElement.removeEventListener('pointerup', stopDrag);
     activeElement.removeEventListener('pointercancel', stopDrag);
 
+    stopPouring();
     checkDropZones(activeElement);
     activeElement = null;
   }
@@ -558,31 +826,44 @@
     const elemRect = elem.getBoundingClientRect();
     const balancePan = document.getElementById('solid-pan').getBoundingClientRect();
     const cylinder = document.getElementById('solid-cylinder').getBoundingClientRect();
+    const workbench = document.getElementById('solid-workbench').getBoundingClientRect();
 
     const objId = elem.id;
+
+    if (objId === 'glass-water') {
+      resetGlassPosition();
+      return;
+    }
+
     const data = solidData[objId];
 
-    let currentVolume = initialWaterVolume;
-
-    // Check Balance Drop
     if (isOverlapping(elemRect, balancePan)) {
       document.getElementById('solid-display').textContent = data.mass.toFixed(2) + ' g';
-      const workbench = document.getElementById('solid-workbench').getBoundingClientRect();
       elem.style.left = (balancePan.left - workbench.left + 35) + 'px';
       elem.style.top = (balancePan.top - workbench.top - 38) + 'px';
     } else {
       updateBalanceState();
     }
 
-    // Check Cylinder Drop
     if (isOverlapping(elemRect, cylinder)) {
-      currentVolume += data.volume;
-      const workbench = document.getElementById('solid-workbench').getBoundingClientRect();
       elem.style.left = (cylinder.left - workbench.left + 14) + 'px';
       elem.style.top = (cylinder.bottom - workbench.top - 48) + 'px';
     }
 
-    // Update Water Height (3px per 1 mL)
+    updateSolidCylinderLevel();
+  }
+
+  function updateSolidCylinderLevel() {
+    let currentVolume = pouredWaterVolume;
+    const cylinder = document.getElementById('solid-cylinder').getBoundingClientRect();
+
+    document.querySelectorAll('.draggable-solid').forEach(elem => {
+      const elemRect = elem.getBoundingClientRect();
+      if (isOverlapping(elemRect, cylinder)) {
+        currentVolume += solidData[elem.id].volume;
+      }
+    });
+
     document.getElementById('solid-water').style.height = (currentVolume * 3).toFixed(1) + 'px';
   }
 
@@ -599,7 +880,7 @@
     let panOccupied = false;
     const balancePan = document.getElementById('solid-pan').getBoundingClientRect();
 
-    draggables.forEach(elem => {
+    document.querySelectorAll('.draggable-solid').forEach(elem => {
       const elemRect = elem.getBoundingClientRect();
       if (isOverlapping(elemRect, balancePan)) {
         panOccupied = true;
@@ -612,6 +893,17 @@
     }
   }
 
+  function resetGlassPosition() {
+    const glass = document.getElementById('glass-water');
+    glass.style.left = '15px';
+    glass.style.top = '200px';
+  }
+
+  function emptyCylinder() {
+    pouredWaterVolume = 0.0;
+    updateSolidCylinderLevel();
+  }
+
   function resetSolids() {
     document.getElementById('obj-stone').style.left = '15px';
     document.getElementById('obj-stone').style.top = '15px';
@@ -622,12 +914,11 @@
     document.getElementById('obj-wood').style.left = '15px';
     document.getElementById('obj-wood').style.top = '135px';
 
-    document.getElementById('solid-display').textContent = '0.00 g';
-    document.getElementById('solid-water').style.height = (initialWaterVolume * 3) + 'px';
-  }
+    resetGlassPosition();
+    emptyCylinder();
 
-  // Set initial water level
-  document.getElementById('solid-water').style.height = (initialWaterVolume * 3) + 'px';
+    document.getElementById('solid-display').textContent = '0.00 g';
+  }
 
   // --- LIQUID LAB LOGIC ---
   function updateLiquidProperties() {
@@ -655,6 +946,83 @@
   function tareLiquidScale() {
     isTared = !isTared;
     updateLiquidProperties();
+  }
+
+  // --- SUBMISSION LOGIC FOR GOOGLE SHEETS ---
+  function submitSolidData(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('solid-submit-btn');
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
+
+    const payload = {
+      type: "solid",
+      studentName: document.getElementById('solid-student-name').value,
+      studentClass: document.getElementById('solid-student-class').value,
+      records: [
+        { objectName: "Stone", mass: val('solid-m-stone'), volume: val('solid-v-stone') },
+        { objectName: "Iron", mass: val('solid-m-iron'), volume: val('solid-v-iron') },
+        { objectName: "Wood", mass: val('solid-m-wood'), volume: val('solid-v-wood') }
+      ]
+    };
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      alert('Solid density data successfully submitted!');
+      btn.disabled = false;
+      btn.textContent = "Submit Solid Data to Google Sheets";
+    })
+    .catch(error => {
+      alert('Error submitting data: ' + error);
+      btn.disabled = false;
+      btn.textContent = "Submit Solid Data to Google Sheets";
+    });
+  }
+
+  function submitLiquidData(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('liquid-submit-btn');
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
+
+    const payload = {
+      type: "liquid",
+      studentName: document.getElementById('liq-student-name').value,
+      studentClass: document.getElementById('liq-student-class').value,
+      records: [
+        { liquidType: "Liquid A", mass: val('liq-m-a'), volume: val('liq-v-a') },
+        { liquidType: "Liquid B", mass: val('liq-m-b'), volume: val('liq-v-b') },
+        { liquidType: "Liquid C", mass: val('liq-m-c'), volume: val('liq-v-c') }
+      ]
+    };
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      alert('Liquid density data successfully submitted!');
+      btn.disabled = false;
+      btn.textContent = "Submit Liquid Data to Google Sheets";
+    })
+    .catch(error => {
+      alert('Error submitting data: ' + error);
+      btn.disabled = false;
+      btn.textContent = "Submit Liquid Data to Google Sheets";
+    });
+  }
+
+  function val(id) {
+    return document.getElementById(id).value || '0';
   }
 </script>
 
