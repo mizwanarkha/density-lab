@@ -911,7 +911,7 @@
 </div>
 
 <script>
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGe2XEdhTcO6PZJO8EmFeV8nTfeBAw9cqulMaRi7NGNY82IGotNuWXzdzoANrHuHkj/exec";
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxcqAyH9D7bOpi3P1r6hnA2p57Mu00cQcHCVr23etFINnyV68Qy0LzsuzEjBKaq07J/exec";
 
   // --- STATE & TIMER (40 MINUTES) ---
   const LAB_DURATION_MINUTES = 40;
@@ -924,12 +924,12 @@
     const savedStartTime = localStorage.getItem('density_lab_start_time');
     const savedName = localStorage.getItem('density_lab_student_name');
     const savedClass = localStorage.getItem('density_lab_student_class');
-    const savedISO = localStorage.getItem('density_lab_start_iso');
+    const savedDateStr = localStorage.getItem('density_lab_start_formatted');
 
     if (savedStartTime && savedName && savedClass) {
       studentName = savedName;
       studentClass = savedClass;
-      startTimeFormatted = savedISO || new Date().toISOString();
+      startTimeFormatted = savedDateStr || new Date().toLocaleString();
       initLabWorkspace();
     }
   });
@@ -942,10 +942,11 @@
     if (!studentName || !studentClass) return;
 
     const startTime = Date.now();
-    startTimeFormatted = new Date(startTime).toISOString();
+    // Standard human-readable date and time string (e.g., "9/17/2026, 3:02:06 PM")
+    startTimeFormatted = new Date(startTime).toLocaleString();
 
     localStorage.setItem('density_lab_start_time', startTime.toString());
-    localStorage.setItem('density_lab_start_iso', startTimeFormatted);
+    localStorage.setItem('density_lab_start_formatted', startTimeFormatted);
     localStorage.setItem('density_lab_student_name', studentName);
     localStorage.setItem('density_lab_student_class', studentClass);
 
