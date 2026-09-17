@@ -532,12 +532,13 @@
       font-weight: 600;
     }
 
-    input[type="text"], input[type="number"] {
+    input[type="text"], input[type="number"], textarea {
       width: 100%;
       padding: 6px;
       border: 1px solid #94a3b8;
       border-radius: 4px;
       font-size: 13px;
+      font-family: inherit;
       user-select: auto;
       -webkit-user-select: auto;
     }
@@ -546,10 +547,28 @@
       text-align: center;
     }
 
-    input:focus {
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    input:focus, textarea:focus {
       border-color: var(--secondary-color);
       outline: none;
       background-color: #f0f9ff;
+    }
+
+    .explanation-group {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .explanation-group {
+        grid-template-columns: 1fr;
+      }
     }
 
     .form-group {
@@ -560,7 +579,7 @@
       display: block;
       margin-bottom: 5px;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     label .req {
@@ -771,6 +790,18 @@
             </tr>
           </tbody>
         </table>
+
+        <!-- Solid Methodology Explanations -->
+        <div class="explanation-group">
+          <div>
+            <label for="solid-mass-method">Methodology: How to find the mass of a solid?</label>
+            <textarea id="solid-mass-method" placeholder="Describe the steps and equipment used to measure the mass of solid objects..."></textarea>
+          </div>
+          <div>
+            <label for="solid-volume-method">Methodology: How to find the volume of a solid?</label>
+            <textarea id="solid-volume-method" placeholder="Describe the water displacement method used to measure solid volume..."></textarea>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -847,6 +878,18 @@
             </tr>
           </tbody>
         </table>
+
+        <!-- Liquid Methodology Explanations -->
+        <div class="explanation-group">
+          <div>
+            <label for="liquid-mass-method">Methodology: How to find the mass of a liquid?</label>
+            <textarea id="liquid-mass-method" placeholder="Describe how to use TARE/ZERO or subtract cylinder mass to find liquid mass..."></textarea>
+          </div>
+          <div>
+            <label for="liquid-volume-method">Methodology: How to find the volume of a liquid?</label>
+            <textarea id="liquid-volume-method" placeholder="Describe how to read the volume level on a graduated cylinder..."></textarea>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -858,7 +901,7 @@
   <div class="modal-card">
     <h3>Confirm Submission</h3>
     <p style="font-size: 14px; color: #475569; line-height: 1.5;">
-      Are you sure you want to submit all recorded solid and liquid density data to your teacher?
+      Are you sure you want to submit all recorded data and explanations to your teacher?
     </p>
     <div class="modal-actions">
       <button class="modal-btn modal-cancel" onclick="closeConfirmationModal()">Review Data</button>
@@ -868,8 +911,7 @@
 </div>
 
 <script>
-  // GOOGLE APPS SCRIPT WEB APP URL INTEGRATED
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxcqAyH9D7bOpi3P1r6hnA2p57Mu00cQcHCVr23etFINnyV68Qy0LzsuzEjBKaq07J/exec";
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGe2XEdhTcO6PZJO8EmFeV8nTfeBAw9cqulMaRi7NGNY82IGotNuWXzdzoANrHuHkj/exec";
 
   // --- STATE & TIMER (40 MINUTES) ---
   const LAB_DURATION_MINUTES = 40;
@@ -993,6 +1035,10 @@
       studentName: studentName,
       studentClass: studentClass,
       startTime: startTimeFormatted,
+      solidMassMethod: document.getElementById('solid-mass-method').value || '',
+      solidVolumeMethod: document.getElementById('solid-volume-method').value || '',
+      liquidMassMethod: document.getElementById('liquid-mass-method').value || '',
+      liquidVolumeMethod: document.getElementById('liquid-volume-method').value || '',
       solidRecords: [
         { objectName: "Stone", mass: val('solid-m-stone'), volume: val('solid-v-stone'), density: val('solid-d-stone') },
         { objectName: "Iron", mass: val('solid-m-iron'), volume: val('solid-v-iron'), density: val('solid-d-iron') },
