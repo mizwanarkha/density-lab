@@ -8,9 +8,11 @@
     :root {
       --primary-color: #1e3a8a;
       --secondary-color: #3b82f6;
-      --bg-color: #f1f5f9;
-      --card-bg: #ffffff;
+      --bg-color: #0f172a;
+      --card-bg: rgba(255, 255, 255, 0.94);
       --text-color: #1e293b;
+      --wood-top: #8d5b40;
+      --wood-front: #5c3a27;
     }
 
     * {
@@ -22,20 +24,36 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-color);
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: var(--text-color);
       margin: 0;
       padding: 12px;
       touch-action: manipulation;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Laboratory Blurred Background Decor */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.12) 0%, transparent 40%),
+        repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 80px);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: -1;
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1020px;
       margin: 0 auto;
       background: var(--card-bg);
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
       position: relative;
     }
 
@@ -43,18 +61,19 @@
       text-align: center;
       color: var(--primary-color);
       margin-top: 0;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
     }
 
-    /* Start Overlay Screen */
+    /* Registration Screen */
     .start-screen {
       max-width: 480px;
       margin: 40px auto;
-      padding: 24px;
-      background: #f8fafc;
+      padding: 28px;
+      background: #ffffff;
       border: 1px solid #cbd5e1;
       border-radius: 12px;
       text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
     .start-screen h2 {
@@ -78,23 +97,25 @@
       cursor: pointer;
       width: 100%;
       margin-top: 10px;
+      transition: background 0.2s;
     }
 
     .start-btn:hover {
       background: #047857;
     }
 
-    /* Timer Bar */
+    /* Timer & Student Header Bar */
     .timer-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #334155;
+      background: #1e293b;
       color: white;
       padding: 10px 16px;
-      border-radius: 8px;
+      border-radius: 10px;
       margin-bottom: 15px;
-      font-weight: bold;
+      font-weight: 600;
+      font-size: 14px;
     }
 
     .timer-display {
@@ -179,26 +200,27 @@
       font-size: 1.1rem;
     }
 
+    /* Wooden Laboratory Workbench Frame */
     .workbench {
       position: relative;
-      height: 440px;
-      background: #e2e8f0;
-      border-radius: 10px;
-      border: 2px solid #cbd5e1;
+      height: 430px;
+      background: linear-gradient(to bottom, #dbeade 0%, #cbd5e1 75%, var(--wood-top) 75%, var(--wood-top) 90%, var(--wood-front) 90%, var(--wood-front) 100%);
+      border-radius: 12px;
+      border: 3px solid #64748b;
       display: flex;
       justify-content: space-evenly;
       align-items: flex-end;
-      padding-bottom: 20px;
-      padding-top: 20px;
+      padding-bottom: 30px;
       padding-left: 80px;
       overflow: hidden;
       touch-action: none;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
     }
 
     .workbench.liquid-workbench {
       padding-left: 0;
       justify-content: center;
-      align-items: center;
+      align-items: flex-end;
     }
 
     .balance-container {
@@ -228,6 +250,7 @@
       align-items: center;
       justify-content: center;
       padding: 6px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     }
 
     .digital-display {
@@ -269,17 +292,6 @@
       background: #475569;
     }
 
-    .submit-btn {
-      background: #059669;
-      margin-top: 15px;
-      padding: 10px 14px;
-      font-size: 14px;
-    }
-
-    .submit-btn:hover {
-      background: #047857;
-    }
-
     .cylinder-container {
       display: flex;
       flex-direction: column;
@@ -297,7 +309,7 @@
       position: relative;
       background: rgba(255, 255, 255, 0.75);
       overflow: hidden;
-      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.08);
     }
 
     .cylinder-base {
@@ -305,6 +317,7 @@
       height: 12px;
       background: #64748b;
       border-radius: 4px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
     .water-fill {
@@ -536,20 +549,98 @@
       background: white;
     }
 
+    /* Single Global Submit Button Container */
+    .global-submit-container {
+      margin-top: 25px;
+      text-align: center;
+      padding: 15px;
+      background: #f1f5f9;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .global-submit-btn {
+      background: #059669;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      max-width: 400px;
+      transition: background 0.2s;
+    }
+
+    .global-submit-btn:hover {
+      background: #047857;
+    }
+
+    /* Modal Popup Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 15px;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .modal-card h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 10px;
+      font-weight: bold;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .modal-cancel {
+      background: #94a3b8;
+      color: white;
+    }
+
+    .modal-confirm {
+      background: #059669;
+      color: white;
+    }
+
+    /* Time Up Overlay */
     .locked-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(15, 23, 42, 0.85);
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.88);
       color: white;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 100;
-      border-radius: 12px;
+      border-radius: 16px;
       text-align: center;
       padding: 20px;
     }
@@ -570,7 +661,7 @@
   <div id="start-screen" class="start-screen">
     <h2>Student Registration</h2>
     <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">
-      Enter your details to begin. You will have <strong>60 minutes</strong> to complete all density observations and submit your findings.
+      Enter your details to start. You have <strong>40 minutes</strong> to complete all observations.
     </p>
     <form id="register-form" onsubmit="startExperiment(event)">
       <div class="form-group">
@@ -581,14 +672,14 @@
         <label for="global-student-class">Class <span class="req">*</span></label>
         <input type="text" id="global-student-class" placeholder="e.g. 7A / 9B" required>
       </div>
-      <button type="submit" class="start-btn">Start Experiment (60 Min)</button>
+      <button type="submit" class="start-btn">Start Experiment (40 Min)</button>
     </form>
   </div>
 
-  <!-- SCREEN 2: Main Workspace & Navigation (Initially Hidden) -->
+  <!-- SCREEN 2: Main Workspace (Initially Hidden) -->
   <div id="lab-workspace" style="display: none;">
     
-    <!-- Top Timer & Student Information Bar -->
+    <!-- Top Header Status Bar -->
     <div class="timer-bar">
       <div>
         Student: <span id="display-student-name" style="color: #60a5fa;">-</span> | 
@@ -596,7 +687,7 @@
       </div>
       <div style="display: flex; align-items: center; gap: 8px;">
         <span>Time Remaining:</span>
-        <div class="timer-display" id="timer-display">60:00</div>
+        <div class="timer-display" id="timer-display">40:00</div>
       </div>
     </div>
 
@@ -607,14 +698,12 @@
 
     <!-- ==================== TAB 1: SOLID DENSITY ==================== -->
     <div id="solid-lab" class="lab-section active">
-      
       <div class="lab-top-row">
         <div class="panel">
           <h3>Laboratory Guide</h3>
           <p style="font-size: 13px; line-height: 1.4;">
-            Explore the equipment to measure the mass and volume of each solid object, then calculate density and record your readings in the table below.
+            Measure the mass and volume of each solid object, then calculate density and record your readings below.
           </p>
-          
           <button class="action-btn" id="pour-btn">Pour Water (+1 mL)</button>
           <button class="action-btn reset-btn" onclick="emptyCylinder()">Empty Cylinder</button>
           <button class="action-btn reset-btn" onclick="resetSolids()">Reset Workspace</button>
@@ -622,11 +711,7 @@
 
         <div class="workbench" id="solid-workbench">
           <div class="pour-stream" id="pour-stream"></div>
-
-          <div id="glass-water" class="draggable-item">
-            Water Pitcher
-          </div>
-
+          <div id="glass-water" class="draggable-item">Water Pitcher</div>
           <div id="obj-stone" class="draggable-solid draggable-item" style="top: 15px; left: 20px;">Stone</div>
           <div id="obj-iron" class="draggable-solid draggable-item" style="top: 70px; left: 20px;">Iron</div>
           <div id="obj-wood" class="draggable-solid draggable-item" style="top: 125px; left: 20px;">Wood</div>
@@ -649,57 +734,49 @@
         </div>
       </div>
 
-      <!-- Student Data Table: Solids -->
-      <form id="solid-form" onsubmit="submitSolidData(event)">
-        <div class="table-container">
-          <h3>Data Table 1: Solid Objects Observation</h3>
-
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Object Name</th>
-                <th>Mass (g) <span class="req">*</span></th>
-                <th>Volume (mL) <span class="req">*</span></th>
-                <th>Density (g/mL) <span class="req">*</span></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Stone</strong></td>
-                <td><input type="number" id="solid-m-stone" step="0.01" placeholder="0.00" required></td>
-                <td><input type="number" id="solid-v-stone" step="0.1" placeholder="0.0" required></td>
-                <td><input type="number" id="solid-d-stone" step="0.01" placeholder="0.00" required></td>
-              </tr>
-              <tr>
-                <td><strong>Iron</strong></td>
-                <td><input type="number" id="solid-m-iron" step="0.01" placeholder="0.00" required></td>
-                <td><input type="number" id="solid-v-iron" step="0.1" placeholder="0.0" required></td>
-                <td><input type="number" id="solid-d-iron" step="0.01" placeholder="0.00" required></td>
-              </tr>
-              <tr>
-                <td><strong>Wood</strong></td>
-                <td><input type="number" id="solid-m-wood" step="0.01" placeholder="0.00" required></td>
-                <td><input type="number" id="solid-v-wood" step="0.1" placeholder="0.0" required></td>
-                <td><input type="number" id="solid-d-wood" step="0.01" placeholder="0.00" required></td>
-              </tr>
-            </tbody>
-          </table>
-          <button type="submit" class="action-btn submit-btn" id="solid-submit-btn">Submit Solid Data to Google Sheets</button>
-        </div>
-      </form>
-
+      <div class="table-container">
+        <h3>Data Table 1: Solid Objects Observation</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Object Name</th>
+              <th>Mass (g) <span class="req">*</span></th>
+              <th>Volume (mL) <span class="req">*</span></th>
+              <th>Density (g/mL) <span class="req">*</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Stone</strong></td>
+              <td><input type="number" id="solid-m-stone" step="0.01" placeholder="0.00"></td>
+              <td><input type="number" id="solid-v-stone" step="0.1" placeholder="0.0"></td>
+              <td><input type="number" id="solid-d-stone" step="0.01" placeholder="0.00"></td>
+            </tr>
+            <tr>
+              <td><strong>Iron</strong></td>
+              <td><input type="number" id="solid-m-iron" step="0.01" placeholder="0.00"></td>
+              <td><input type="number" id="solid-v-iron" step="0.1" placeholder="0.0"></td>
+              <td><input type="number" id="solid-d-iron" step="0.01" placeholder="0.00"></td>
+            </tr>
+            <tr>
+              <td><strong>Wood</strong></td>
+              <td><input type="number" id="solid-m-wood" step="0.01" placeholder="0.00"></td>
+              <td><input type="number" id="solid-v-wood" step="0.1" placeholder="0.0"></td>
+              <td><input type="number" id="solid-d-wood" step="0.01" placeholder="0.00"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- ==================== TAB 2: LIQUID DENSITY ==================== -->
     <div id="liquid-lab" class="lab-section">
-      
       <div class="lab-top-row">
         <div class="panel">
           <h3>Laboratory Guide</h3>
           <p style="font-size: 13px; line-height: 1.4;">
-            Use the controls to measure the mass and volume of each liquid material, then calculate density and record your readings in the table below.
+            Measure the mass and volume of each liquid material, then calculate density and record your readings below.
           </p>
-
           <div class="form-group">
             <label for="liquid-type">Select Liquid Material:</label>
             <select id="liquid-type" onchange="updateLiquidProperties()">
@@ -708,12 +785,10 @@
               <option value="glycerin">Liquid C</option>
             </select>
           </div>
-
           <div class="form-group">
             <label for="liquid-volume-slider">Volume: <span id="vol-slider-val">0</span> mL</label>
             <input type="range" id="liquid-volume-slider" min="0" max="100" value="0" step="1" oninput="updateLiquidProperties()">
           </div>
-
           <button class="action-btn reset-btn" onclick="tareLiquidScale()">TARE / ZERO</button>
         </div>
 
@@ -735,69 +810,86 @@
         </div>
       </div>
 
-      <!-- Student Data Table: Liquids -->
-      <form id="liquid-form" onsubmit="submitLiquidData(event)">
-        <div class="table-container">
-          <h3>Data Table 2: Liquid Material Observation</h3>
+      <div class="table-container">
+        <h3>Data Table 2: Liquid Material Observation</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Liquid Type</th>
+              <th>Mass (g) <span class="req">*</span></th>
+              <th>Volume (mL) <span class="req">*</span></th>
+              <th>Density (g/mL) <span class="req">*</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Liquid A</strong></td>
+              <td><input type="number" id="liq-m-a" step="0.01" placeholder="0.00"></td>
+              <td><input type="number" id="liq-v-a" step="0.1" placeholder="0.0"></td>
+              <td><input type="number" id="liq-d-a" step="0.01" placeholder="0.00"></td>
+            </tr>
+            <tr>
+              <td><strong>Liquid B</strong></td>
+              <td><input type="number" id="liq-m-b" step="0.01" placeholder="0.00"></td>
+              <td><input type="number" id="liq-v-b" step="0.1" placeholder="0.0"></td>
+              <td><input type="number" id="liq-d-b" step="0.01" placeholder="0.00"></td>
+            </tr>
+            <tr>
+              <td><strong>Liquid C</strong></td>
+              <td><input type="number" id="liq-m-c" step="0.01" placeholder="0.00"></td>
+              <td><input type="number" id="liq-v-c" step="0.1" placeholder="0.0"></td>
+              <td><input type="number" id="liq-d-c" step="0.01" placeholder="0.00"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Liquid Type</th>
-                <th>Mass (g) <span class="req">*</span></th>
-                <th>Volume (mL) <span class="req">*</span></th>
-                <th>Density (g/mL) <span class="req">*</span></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Liquid A</strong></td>
-                <td><input type="number" id="liq-m-a" step="0.01" placeholder="0.00" required></td>
-                <td><input type="number" id="liq-v-a" step="0.1" placeholder="0.0" required></td>
-                <td><input type="number" id="liq-d-a" step="0.01" placeholder="0.00" required></td>
-              </tr>
-              <tr>
-                <td><strong>Liquid B</strong></td>
-                <td><input type="number" id="liq-m-b" step="0.01" placeholder="0.00" required></td>
-                <td><input type="number" id="liq-v-b" step="0.1" placeholder="0.0" required></td>
-                <td><input type="number" id="liq-d-b" step="0.01" placeholder="0.00" required></td>
-              </tr>
-              <tr>
-                <td><strong>Liquid C</strong></td>
-                <td><input type="number" id="liq-m-c" step="0.01" placeholder="0.00" required></td>
-                <td><input type="number" id="liq-v-c" step="0.1" placeholder="0.0" required></td>
-                <td><input type="number" id="liq-d-c" step="0.01" placeholder="0.00" required></td>
-              </tr>
-            </tbody>
-          </table>
-          <button type="submit" class="action-btn submit-btn" id="liquid-submit-btn">Submit Liquid Data to Google Sheets</button>
-        </div>
-      </form>
-
+    <!-- Unified Global Submission Button -->
+    <div class="global-submit-container">
+      <button class="global-submit-btn" onclick="openConfirmationModal()" id="submit-all-btn">
+        Submit All Experiment Data to Google Sheets
+      </button>
     </div>
 
   </div>
+</div>
 
+<!-- Confirmation Popup Modal -->
+<div id="confirm-modal" class="modal-overlay">
+  <div class="modal-card">
+    <h3>Confirm Submission</h3>
+    <p style="font-size: 14px; color: #475569; line-height: 1.5;">
+      Are you sure you want to submit all recorded solid and liquid density data to your teacher?
+    </p>
+    <div class="modal-actions">
+      <button class="modal-btn modal-cancel" onclick="closeConfirmationModal()">Review Data</button>
+      <button class="modal-btn modal-confirm" onclick="confirmAndSubmitAllData()">Yes, Submit</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  // GOOGLE APPS SCRIPT WEB APP URL INTEGRATED
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3j64_bbmZaB0uGN4KMTAa3jJz5mzZbCVPxvCLm4w0hg8XWWRZaofzTTIjvxMWqPrG/exec";
+  // UPDATED GOOGLE APPS SCRIPT WEB APP URL INTEGRATED
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxcqAyH9D7bOpi3P1r6hnA2p57Mu00cQcHCVr23etFINnyV68Qy0LzsuzEjBKaq07J/exec";
 
-  // --- GLOBAL TIMER & STUDENT STATE ---
-  const LAB_DURATION_MINUTES = 60;
+  // --- STATE & TIMER (UPDATED TO 40 MINUTES) ---
+  const LAB_DURATION_MINUTES = 40;
   let timerInterval = null;
   let studentName = "";
   let studentClass = "";
+  let startTimeFormatted = "";
 
   window.addEventListener('DOMContentLoaded', () => {
     const savedStartTime = localStorage.getItem('density_lab_start_time');
     const savedName = localStorage.getItem('density_lab_student_name');
     const savedClass = localStorage.getItem('density_lab_student_class');
+    const savedISO = localStorage.getItem('density_lab_start_iso');
 
     if (savedStartTime && savedName && savedClass) {
       studentName = savedName;
       studentClass = savedClass;
+      startTimeFormatted = savedISO || new Date().toISOString();
       initLabWorkspace();
     }
   });
@@ -810,7 +902,10 @@
     if (!studentName || !studentClass) return;
 
     const startTime = Date.now();
+    startTimeFormatted = new Date(startTime).toISOString();
+
     localStorage.setItem('density_lab_start_time', startTime.toString());
+    localStorage.setItem('density_lab_start_iso', startTimeFormatted);
     localStorage.setItem('density_lab_student_name', studentName);
     localStorage.setItem('density_lab_student_class', studentClass);
 
@@ -867,24 +962,74 @@
     overlay.innerHTML = `
       <h2>TIME IS UP!</h2>
       <p style="font-size: 16px; max-width: 400px; line-height: 1.5;">
-        The 60-minute time limit for this virtual density lab has expired. Your inputs have been recorded.
+        The 40-minute time limit for this lab has expired. Your entries have been locked and submitted.
       </p>
     `;
     document.querySelector('.container').appendChild(overlay);
-
-    autoSubmitOnTimeUp();
+    executeDataSubmission();
   }
 
-  function autoSubmitOnTimeUp() {
-    if (val('solid-m-stone') !== '0') {
-      submitSolidData(new Event('submit'));
-    }
-    if (val('liq-m-a') !== '0') {
-      submitLiquidData(new Event('submit'));
-    }
+  // --- MODAL POPUP LOGIC ---
+  function openConfirmationModal() {
+    document.getElementById('confirm-modal').style.display = 'flex';
   }
 
-  // --- DATA & STATE ---
+  function closeConfirmationModal() {
+    document.getElementById('confirm-modal').style.display = 'none';
+  }
+
+  function confirmAndSubmitAllData() {
+    closeConfirmationModal();
+    executeDataSubmission();
+  }
+
+  function executeDataSubmission() {
+    const btn = document.getElementById('submit-all-btn');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Submitting Data...";
+    }
+
+    const payload = {
+      type: "all_data",
+      studentName: studentName,
+      studentClass: studentClass,
+      startTime: startTimeFormatted,
+      solidRecords: [
+        { objectName: "Stone", mass: val('solid-m-stone'), volume: val('solid-v-stone'), density: val('solid-d-stone') },
+        { objectName: "Iron", mass: val('solid-m-iron'), volume: val('solid-v-iron'), density: val('solid-d-iron') },
+        { objectName: "Wood", mass: val('solid-m-wood'), volume: val('solid-v-wood'), density: val('solid-d-wood') }
+      ],
+      liquidRecords: [
+        { liquidType: "Liquid A", mass: val('liq-m-a'), volume: val('liq-v-a'), density: val('liq-d-a') },
+        { liquidType: "Liquid B", mass: val('liq-m-b'), volume: val('liq-v-b'), density: val('liq-d-b') },
+        { liquidType: "Liquid C", mass: val('liq-m-c'), volume: val('liq-v-c'), density: val('liq-d-c') }
+      ]
+    };
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      alert('All density lab data successfully submitted!');
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = "Submit All Experiment Data to Google Sheets";
+      }
+    })
+    .catch(error => {
+      alert('Error submitting data: ' + error);
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = "Submit All Experiment Data to Google Sheets";
+      }
+    });
+  }
+
+  // --- APPARATUS LAB LOGIC ---
   const solidData = {
     'obj-stone': { name: 'Stone', mass: 58.32, volume: 21.6 },
     'obj-iron': { name: 'Iron', mass: 159.36, volume: 20.3 },
@@ -902,7 +1047,6 @@
   let isTared = false;
   let pourInterval = null;
 
-  // --- TAB SWITCHING ---
   function switchLab(type) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.lab-section').forEach(sec => sec.classList.remove('active'));
@@ -917,14 +1061,12 @@
     }
   }
 
-  // --- DETAILED 1-100 mL SCALE GENERATOR ---
   function createDetailedTicks(containerId) {
     const ticksContainer = document.getElementById(containerId);
     ticksContainer.innerHTML = '';
     
     for (let ml = 0; ml <= 100; ml++) {
       const tick = document.createElement('div');
-      
       if (ml % 10 === 0) {
         tick.className = 'tick major';
         if (ml > 0) {
@@ -938,7 +1080,6 @@
       } else {
         tick.className = 'tick';
       }
-
       tick.style.bottom = (ml * 2.8) + 'px';
       ticksContainer.appendChild(tick);
     }
@@ -947,7 +1088,6 @@
   createDetailedTicks('solid-ticks');
   createDetailedTicks('liquid-ticks');
 
-  // --- CONTINUOUS REALISTIC POURING ---
   function addWaterUnit() {
     if (pouredWaterVolume < 100) {
       pouredWaterVolume += 1.0;
@@ -983,7 +1123,6 @@
   pourBtn.addEventListener('pointerup', stopPouring);
   pourBtn.addEventListener('pointerleave', stopPouring);
 
-  // --- POINTER EVENT DRAG SYSTEM ---
   const draggables = document.querySelectorAll('.draggable-item');
   let activeElement = null;
   let offsetX = 0;
@@ -1012,7 +1151,6 @@
     e.preventDefault();
 
     const workbench = document.getElementById('solid-workbench').getBoundingClientRect();
-
     let left = e.clientX - workbench.left - offsetX;
     let top = e.clientY - workbench.top - offsetY;
 
@@ -1144,7 +1282,6 @@
     document.getElementById('solid-display').textContent = '0.00 g';
   }
 
-  // --- LIQUID LAB LOGIC ---
   function updateLiquidProperties() {
     const liquidType = document.getElementById('liquid-type').value;
     const volume = parseFloat(document.getElementById('liquid-volume-slider').value);
@@ -1170,79 +1307,6 @@
   function tareLiquidScale() {
     isTared = !isTared;
     updateLiquidProperties();
-  }
-
-  // --- SUBMISSION LOGIC FOR GOOGLE SHEETS ---
-  function submitSolidData(e) {
-    if (e && e.preventDefault) e.preventDefault();
-
-    const btn = document.getElementById('solid-submit-btn');
-    btn.disabled = true;
-    btn.textContent = "Submitting...";
-
-    const payload = {
-      type: "solid",
-      studentName: studentName,
-      studentClass: studentClass,
-      records: [
-        { objectName: "Stone", mass: val('solid-m-stone'), volume: val('solid-v-stone'), density: val('solid-d-stone') },
-        { objectName: "Iron", mass: val('solid-m-iron'), volume: val('solid-v-iron'), density: val('solid-d-iron') },
-        { objectName: "Wood", mass: val('solid-m-wood'), volume: val('solid-v-wood'), density: val('solid-d-wood') }
-      ]
-    };
-
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(() => {
-      alert('Solid density data successfully submitted!');
-      btn.disabled = false;
-      btn.textContent = "Submit Solid Data to Google Sheets";
-    })
-    .catch(error => {
-      alert('Error submitting data: ' + error);
-      btn.disabled = false;
-      btn.textContent = "Submit Solid Data to Google Sheets";
-    });
-  }
-
-  function submitLiquidData(e) {
-    if (e && e.preventDefault) e.preventDefault();
-
-    const btn = document.getElementById('liquid-submit-btn');
-    btn.disabled = true;
-    btn.textContent = "Submitting...";
-
-    const payload = {
-      type: "liquid",
-      studentName: studentName,
-      studentClass: studentClass,
-      records: [
-        { liquidType: "Liquid A", mass: val('liq-m-a'), volume: val('liq-v-a'), density: val('liq-d-a') },
-        { liquidType: "Liquid B", mass: val('liq-m-b'), volume: val('liq-v-b'), density: val('liq-d-b') },
-        { liquidType: "Liquid C", mass: val('liq-m-c'), volume: val('liq-v-c'), density: val('liq-d-c') }
-      ]
-    };
-
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(() => {
-      alert('Liquid density data successfully submitted!');
-      btn.disabled = false;
-      btn.textContent = "Submit Liquid Data to Google Sheets";
-    })
-    .catch(error => {
-      alert('Error submitting data: ' + error);
-      btn.disabled = false;
-      btn.textContent = "Submit Liquid Data to Google Sheets";
-    });
   }
 
   function val(id) {
